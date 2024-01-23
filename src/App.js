@@ -11,11 +11,11 @@ function App() {
                 </p>
                 <a
                     className="App-link"
-                    href="https://IIEADB.github.io/Combitrainer-web/?event=4205e91e-148f-4749-a56a-7bb37b5ae2d6"
+                    href="combitrainer://Combitrainer-web/?event=4205e91e-148f-4749-a56a-7bb37b5ae2d6"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    Click
+                    Join Event
                 </a>
                 <div className="App">
                     <Login />
