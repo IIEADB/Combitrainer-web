@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/combitrainer-web/static/css/main.f855e6bc.css",
-    "main.js": "/combitrainer-web/static/js/main.972021a5.js",
+    "main.js": "/combitrainer-web/static/js/main.8c170a82.js",
     "static/js/787.184d61e8.chunk.js": "/combitrainer-web/static/js/787.184d61e8.chunk.js",
     "static/media/logo.svg": "/combitrainer-web/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/combitrainer-web/index.html",
     "main.f855e6bc.css.map": "/combitrainer-web/static/css/main.f855e6bc.css.map",
-    "main.972021a5.js.map": "/combitrainer-web/static/js/main.972021a5.js.map",
+    "main.8c170a82.js.map": "/combitrainer-web/static/js/main.8c170a82.js.map",
     "787.184d61e8.chunk.js.map": "/combitrainer-web/static/js/787.184d61e8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.972021a5.js"
+    "static/js/main.8c170a82.js"
   ]
 }
