@@ -1,7 +1,9 @@
 import axios from "axios";
 import { store } from "./store/index";
 import { clearToken, setToken } from "./reducers/authSlice";
-const BASE_URL = "https://bedbug-funky-vastly.ngrok-free.app";
+// import env from "react-dotenv";
+
+const BASE_URL = window.env.BASE_URL;
 const api = axios.create({ baseURL: BASE_URL });
 const apiAuth = axios.create({ baseURL: BASE_URL });
 
