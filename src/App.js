@@ -1,28 +1,35 @@
-import logo from "./logo.svg";
 import "./App.css";
-import Login from "./Login";
-function App() {
+import React from "react";
+import { Provider } from "react-redux";
+import { store, persistor } from "./store/index";
+import { Route, Routes, RouterProvider, createHashRouter } from "react-router-dom";
+import { PersistGate } from "redux-persist/integration/react";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+const router = createHashRouter([{ path: "*", Component: Root }]);
+
+function Root() {
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="combitrainer://Combitrainer-web/?event=4205e91e-148f-4749-a56a-7bb37b5ae2d6"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Join Event
-                </a>
-                <div className="App">
-                    <Login />
-                </div>
-            </header>
-        </div>
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <Routes>
+                    <Route path="/" element={<Login />} />
+                    <Route
+                        path="/profile"
+                        element={
+                            <ProtectedRoute>
+                                <Profile />
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </PersistGate>
+        </Provider>
     );
 }
 
-export default App;
+export default function App() {
+    return <RouterProvider router={router} />;
+}
