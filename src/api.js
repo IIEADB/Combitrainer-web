@@ -1,9 +1,8 @@
 import axios from "axios";
 import { store } from "./store/index";
 import { clearToken, setToken } from "./reducers/authSlice";
-// import env from "react-dotenv";
 
-const BASE_URL = window.env.API_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 const api = axios.create({ baseURL: BASE_URL });
 const apiAuth = axios.create({ baseURL: BASE_URL });
 
