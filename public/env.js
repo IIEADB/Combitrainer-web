@@ -1,3 +1,3 @@
 window.env = {
-    BASE_URL: "https://bedbug-funky-vastly.ngrok-free.app",
+    API_URL: "https://bedbug-funky-vastly.ngrok-free.app",
 };

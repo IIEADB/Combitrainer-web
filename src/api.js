@@ -3,7 +3,7 @@ import { store } from "./store/index";
 import { clearToken, setToken } from "./reducers/authSlice";
 // import env from "react-dotenv";
 
-const BASE_URL = window.env.BASE_URL;
+const BASE_URL = window.env.API_URL;
 const api = axios.create({ baseURL: BASE_URL });
 const apiAuth = axios.create({ baseURL: BASE_URL });
 
