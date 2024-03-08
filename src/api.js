@@ -16,16 +16,16 @@ api.interceptors.response.use(
             originalRequest._retry = true;
             if (error.response.status === 401) {
                 try {
-                    const response = await apiAuth.post("/api/login/refresh", {
-                        refresh: store.getState().refreshToken,
+                    const response = await apiAuth.post("login/refresh", {
+                        refresh: store.getState().auth.refreshToken,
                     });
 
                     // Update the states in redux store
                     store.dispatch(
                         setToken({
                             token: response.data.access,
-                            refreshToken: store.getState().refreshToken,
-                            user: store.getState().user,
+                            refreshToken: store.getState().auth.refreshToken,
+                            user: store.getState().auth.user,
                         })
                     );
 
@@ -53,8 +53,8 @@ apiAuth.interceptors.response.use(
 );
 
 api.interceptors.request.use((config) => {
-    // refreshRetries = 0;
-    const token = store.getState().token;
+    refreshRetries = 0;
+    const token = store.getState().auth.token;
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -62,29 +62,39 @@ api.interceptors.request.use((config) => {
 });
 
 // Authentication endpoints
-export const authenticate = (data) => apiAuth.post("/api/login", data);
-export const signUp = (data) => apiAuth.post("/api/register", data);
-export const fetchUserProfile = () => api.get("/api/user");
-export const updateUserProfile = (data) => api.put("/api/user", data);
-export const otpVerify = (data) => api.post("/api/otp_verify", data);
-export const otpResend = (data) => api.post("/api/otp_resend", data);
-export const passwordResetRequest = (data) => api.post("/api/pwd_reset", data);
-export const passwordResetVerifyAndChange = (data) => api.put("/api/pwd_reset", data);
-export const deleteAccount = (id) => api.delete(`/api/user/delete/${id}`);
+export const authenticate = (data) => apiAuth.post("login", data);
+export const signUp = (data) => apiAuth.post("register", data);
+export const fetchUserProfile = () => api.get("user");
+export const updateUserProfile = (data) => api.put("user", data);
+export const otpVerify = (data) => api.post("otp_verify", data);
+export const otpResend = (data) => api.post("otp_resend", data);
+export const passwordResetRequest = (data) => api.post("pwd_reset", data);
+export const passwordResetVerifyAndChange = (data) => api.put("pwd_reset", data);
+export const deleteAccount = (id) => api.delete(`user/delete/${id}`);
+export const userExists = (data) => {
+    let url = "user/exists";
+    url += `?username=${data.username}&email=${data.email}`;
+    return api.get(url);
+};
 
 // Activity endpoints
-export const fetchActivities = (period) => api.get(`api/user/history/${period}`);
-export const startActivity = (data) => api.post("/api/activity", data);
-export const updateActivity = (id, data) => api.put(`/api/activity/${id}`, data);
-export const deleteActivity = (id, data) => api.delete(`/api/activity/${id}`, data);
+export const fetchActivities = (period, page) => {
+    let url = "user/history";
+    url += `?period=${period}&page=${page}`;
+    return api.get(url);
+};
+
+export const startActivity = (data) => api.post("activity", data);
+export const updateActivity = (id, data) => api.put(`activity/${id}`, data);
+export const deleteActivity = (id, data) => api.delete(`activity/${id}`, data);
 
 //Friendship endpoint
-export const fetchFriends = () => api.get(`/api/friendships`);
-export const acceptFriend = (id) => api.put(`/api/friendships/${id}`);
-export const removeFriends = (id) => api.delete(`/api/friendships/${id}`);
-export const sendFriendRequest = (userID) => api.post(`/api/friendships`, userID);
+export const fetchFriends = () => api.get(`friendships`);
+export const acceptFriend = (id) => api.put(`friendships/${id}`);
+export const removeFriends = (id) => api.delete(`friendships/${id}`);
+export const sendFriendRequest = (userID) => api.post(`friendships`, userID);
 export const filteredUsers = (searchQuery) => {
-    let url = "/api/filtered-friends";
+    let url = "filtered-friends";
 
     if (searchQuery) {
         url += `?q=${searchQuery}`;
@@ -93,33 +103,32 @@ export const filteredUsers = (searchQuery) => {
 };
 
 // Achievements endpoint
-export const fetchAchievements = (selectedFilter) => {
-    let url = "/api/user/achievements";
+export const fetchAchievements = (selectedFilter, page) => {
+    let url = `user/achievements?page=${page}`;
 
-    if (selectedFilter === "Personal") {
-        url += `?personal=${true}`;
+    if (selectedFilter == "Personal") {
+        url += `&personal=${true}`;
     } else if (selectedFilter !== "all") {
-        url += `?type=${selectedFilter}`;
+        url += `&type=${selectedFilter}`;
     }
     return api.get(url);
 };
-export const createAchievement = (data) => api.post("api/user/personal/achievements", data);
-export const deleteAchievement = (id) => api.delete(`api/user/personal/achievements/${id}`);
-export const editAchievement = (id, data) => api.put(`api/user/personal/achievements/${id}`, data);
+export const createAchievement = (data) => api.post("user/personal/achievements", data);
+export const deleteAchievement = (id) => api.delete(`user/personal/achievements/${id}`);
+export const editAchievement = (id, data) => api.put(`user/personal/achievements/${id}`, data);
 
 // Reviews endpoint
-export const fetchReviews = () => api.get("/api/user/reviews");
-export const fetchTraininglocationReviews = (id) => api.get(`api/training-locations/${id}/reviews`);
-export const postReview = (data) => api.post("/api/user/reviews", data);
-export const updateReview = (id, data) => api.put(`/api/user/reviews/${id}`, data);
-export const deleteReview = (id) => api.delete(`/api/user/reviews/${id}`);
+export const fetchReviews = () => api.get("user/reviews");
+export const fetchTraininglocationReviews = (id) => api.get(`training-locations/${id}/reviews`);
+export const postReview = (data) => api.post("user/reviews", data);
+export const updateReview = (id, data) => api.put(`user/reviews/${id}`, data);
+export const deleteReview = (id) => api.delete(`user/reviews/${id}`);
 
 // Leaderboard endpoint
-export const fetchLeaderboard = (event, period, page) =>
-    api.get("api/leaderboard", { params: { event, period, page } });
-export const inspectProfile = (username) => api.get(`/api/leaderboard/profiles/${username}`);
+export const fetchLeaderboard = (event, period, page) => api.get("leaderboard", { params: { event, period, page } });
+export const inspectProfile = (username) => api.get(`leaderboard/profiles/${username}`);
 export const fetchEvents = (searchQuery) => {
-    let url = "/api/events";
+    let url = "events";
 
     if (searchQuery) {
         url += `?q=${searchQuery}`;
@@ -127,43 +136,52 @@ export const fetchEvents = (searchQuery) => {
     return api.get(url);
 };
 
-export const createEvent = (data) => api.post(`/api/events`, data);
-export const editEvent = (id, data) => api.put(`/api/events/${id}`, data);
-export const deleteEvent = (id) => api.delete(`/api/events/${id}`);
-export const fetchInvitations = () => api.get("api/user/invitations");
-export const createInvitation = (data) => api.post("api/user/invitations", data);
-export const answerInvitation = (id, data) => api.put(`api/user/invitations/${id}`, data);
-export const deleteInvitation = (id, data) => api.delete(`api/user/invitations/${id}`, data);
-export const joinEvent = (UUID) => api.post(`api/events/uuid/${UUID}/join`);
-export const getInvitationLink = (eventId) => api.get(`api/events/id/${eventId}/create_url`);
-export const refreshInvitationLink = (eventId) => api.put(`api/events/id/${eventId}/create_url`);
+export const createEvent = (data) => api.post(`events`, data);
+export const editEvent = (id, data) => api.put(`events/${id}`, data);
+export const deleteEvent = (id) => api.delete(`events/${id}`);
+export const fetchInvitations = (id) => api.get(`events/${id}/invitations`);
+export const createInvitation = (data) => api.post("user/invitations", data);
+export const answerInvitation = (id, data) => api.put(`user/invitations/${id}`, data);
+export const deleteInvitation = (id, data) => api.delete(`user/invitations/${id}`, data);
+export const joinEvent = (UUID) => api.post(`events/uuid/${UUID}/join`);
+export const getInvitationLink = (eventId) => api.get(`events/id/${eventId}/create_url`);
+export const refreshInvitationLink = (eventId) => api.put(`events/id/${eventId}/create_url`);
 
 // Training locations endpoint
-export const fetchTrainingLocations = (selectedFilter) => {
-    let url = "/api/training-locations";
-
-    const filter = selectedFilter.toLowerCase(); // Convert to lowercase
-
-    if (filter !== "all") {
-        url += `?type=${filter}`;
-    }
-
-    return api.get(url);
+export const fetchTrainingLocations = (params) => {
+    return api.get("training-locations", { params });
 };
 
 // Statistics endpoint
 export const fetchStatistics = (period) => {
     if (period === null) {
-        return api.get("/api/user/statistics");
+        return api.get("user/statistics");
     } else {
-        return api.get(`/api/user/statistics/${period}`);
+        return api.get(`user/statistics/${period}`);
     }
 };
+
+// Team endpoints
+export const isInTeam = (eventId) => api.get(`events/${eventId}/is_in_team`);
+export const fetchTeams = (eventId, searchQuery) => {
+    let url = `events/${eventId}/teams`;
+    if (searchQuery) {
+        url += `?name=${searchQuery}`;
+    }
+    return api.get(url);
+};
+export const createTeam = (eventId, data) => api.post(`events/${eventId}/teams`, data);
+export const joinTeam = (teamId, data) => api.post(`team/${teamId}/join`, data);
+export const getTeam = (teamId, page = 1) => api.get(`team/${teamId}?page=${page}`);
+export const editTeam = (teamId, data) => api.put(`team/${teamId}`, data);
+export const deleteTeam = (teamId) => api.delete(`team/${teamId}`);
+export const removeTeamMember = (teamId, userId) => api.delete(`team/${teamId}/remove/${userId}`);
 
 export default api;
 async function errorCleanUp(error) {
     let errorKeys;
     let modalMessage;
+
     if (error.response.data.message) {
         errorKeys = error.response.data.message;
         const errorResponse = error.response.data.message;
@@ -183,7 +201,7 @@ async function errorCleanUp(error) {
     } else {
         modalMessage = "Something went wrong!";
     }
-    if (errorKeys !== undefined) {
+    if (errorKeys != undefined) {
         error.response.data.fields = errorKeys;
     }
     error.response.data.message = modalMessage;
