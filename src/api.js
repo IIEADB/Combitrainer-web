@@ -53,7 +53,7 @@ apiAuth.interceptors.response.use(
 );
 
 api.interceptors.request.use((config) => {
-    refreshRetries = 0;
+    // refreshRetries = 0;
     const token = store.getState().auth.token;
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
