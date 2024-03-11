@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.textContainer {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row;
+    margin-bottom: 30px;
+    margin-top: -15px;
+}
+
+.text {
+    font-size: 12px;
+    font-weight: bold;
+    color: grey;
+    font-family: monospace;
+}
+
+.logo {
+    margin-left: 10px;
+    width: 104px;
+    height: 12px;
+}
