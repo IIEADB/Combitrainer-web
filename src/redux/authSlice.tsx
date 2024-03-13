@@ -2,14 +2,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
     token: string | null;
-    refreshToken: string | null;
+    refreshToken: string | "";
     isAuthenticated: boolean;
     user: any;
 }
 
 const initialState: AuthState = {
     token: null,
-    refreshToken: null,
+    refreshToken: "",
     isAuthenticated: false,
     user: null,
 };
@@ -27,7 +27,7 @@ const authSlice = createSlice({
         },
         clearToken(state) {
             state.token = null;
-            state.refreshToken = null;
+            state.refreshToken = "";
             state.isAuthenticated = false;
             state.user = null;
         },

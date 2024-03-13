@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { store } from "../redux/store";
 import { clearToken, setToken } from "../redux/authSlice";
 
@@ -17,29 +17,29 @@ api.interceptors.response.use(
             originalRequest._retry = true;
             if (error.response.status === 401) {
                 try {
+                    // Access the auth state directly
+                    const refreshToken = store.getState().refreshToken;
                     const response = await apiAuth.post("login/refresh", {
-                        refresh: store.getState().auth.refreshToken,
+                        refresh: refreshToken,
                     });
 
-                    // Update the states in redux store
+                    // Access the auth state directly
+                    const auth = store.getState();
                     store.dispatch(
                         setToken({
                             token: response.data.access,
-                            refreshToken: store.getState().auth.refreshToken,
-                            user: store.getState().auth.user,
+                            refreshToken: auth.refreshToken,
+                            user: auth.user,
                         })
                     );
 
-                    // Set the new access token in the request headers and retry the original request
                     originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
                     return api(originalRequest);
                 } catch (err) {
-                    // If the refresh token is invalid, log the user out
                     store.dispatch(clearToken());
                 }
             }
         }
-        await errorCleanUp(error);
         return Promise.reject(error);
     }
 );
@@ -49,14 +49,12 @@ apiAuth.interceptors.response.use(
         return response;
     },
     async (error) => {
-        await errorCleanUp(error);
         return Promise.reject(error);
     }
 );
 
 api.interceptors.request.use((config) => {
-    // refreshRetries = 0;
-    const token = store.getState().auth.token;
+    const token = store.getState().token;
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -166,40 +164,5 @@ export const getInvitationLink = (eventId?: number): ApiResponse<{ url: string }
 
 export const refreshInvitationLink = (eventId?: number): ApiResponse<{ url: string }> =>
     api.put<{ url: string }>(`events/id/${eventId}/create_url`);
-
-async function errorCleanUp(error: AxiosError) {
-    // Type the error as AxiosError
-    let errorKeys;
-    let modalMessage;
-
-    if (error.response && error.response.data && error.response.data.message) {
-        errorKeys = error.response.data.message;
-        const errorResponse = error.response as AxiosResponse<ErrorResponse>;
-        if (!(typeof errorResponse === "string" || errorResponse instanceof String)) {
-            const errorMessages = Object.keys(errorResponse).map((key) => {
-                let errorMessage = errorResponse[key];
-                if (Array.isArray(errorMessage)) {
-                    errorMessage = errorMessage.join(" "); // Join array elements into a single string
-                }
-                if (errorMessage === "This field may not be blank.") {
-                    errorMessage = `${key.charAt(0).toUpperCase() + key.slice(1)} may not be blank.`;
-                }
-                return errorMessage;
-            });
-            let combinedMessages = await Promise.all(errorMessages);
-            modalMessage = combinedMessages.join("\n");
-        } else {
-            modalMessage = errorResponse;
-        }
-    } else {
-        modalMessage = "Something went wrong!";
-    }
-    if (errorKeys != undefined && error.response) {
-        error.response.data.fields = errorKeys;
-    }
-    if (error.response) {
-        error.response.data.message = modalMessage;
-    }
-}
 
 export default api;
