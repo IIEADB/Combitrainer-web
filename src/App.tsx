@@ -1,4 +1,3 @@
-import "./App.css";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./redux/store";
@@ -7,6 +6,7 @@ import Login from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Layout } from "./components/Layout";
+import { NotFound } from "./components/NotFound";
 
 const router = createBrowserRouter([
     {
@@ -26,6 +26,10 @@ const router = createBrowserRouter([
                 ),
             },
         ],
+    },
+    {
+        path: "*",
+        element: <NotFound />,
     },
 ]);
 

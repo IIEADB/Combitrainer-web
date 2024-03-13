@@ -1,14 +1,15 @@
 import { Outlet } from "react-router-dom";
-import "./Layout.css";
+import styles from "./layout.module.css";
+import { CompanyLogo } from "./CompanyLogo";
 export const Layout = () => {
     return (
-        <div className="container">
-            <header className="header">
-                <p>Header</p>
-            </header>
+        <div className={styles.container}>
+            <nav className={styles.nav}>
+                <CompanyLogo />
+            </nav>
             <Outlet></Outlet>
-            <footer className="footer">
-                <p>Footer</p>
+            <footer className={styles.footer}>
+                <p className={styles.text}>Made with love by the Combitrainer team</p>
             </footer>
         </div>
     );
