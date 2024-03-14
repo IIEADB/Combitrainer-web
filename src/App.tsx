@@ -1,37 +1,47 @@
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./redux/store";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Layout } from "./components/Layout";
 import { NotFound } from "./components/NotFound";
+import { Dashboard } from "./pages/dashboard/Dashboard";
+import { Events } from "./pages/events/Events";
+import { fetchEvents } from "./api/api";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { Event } from "./pages/events/Event";
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Layout />,
-        children: [
-            {
-                index: true,
-                element: <Login />,
-            },
-            {
-                path: "/profile",
-                element: (
+const router = createBrowserRouter(
+    createRoutesFromElements(
+        <Route path="/" element={<Layout />} errorElement={<ErrorBoundary />}>
+            <Route index={true} element={<Login />} errorElement={<ErrorBoundary />} />
+            <Route
+                path="dashboard"
+                element={
                     <ProtectedRoute>
-                        <Profile />
+                        <Dashboard />
                     </ProtectedRoute>
-                ),
-            },
-        ],
-    },
-    {
-        path: "*",
-        element: <NotFound />,
-    },
-]);
+                }
+                errorElement={<ErrorBoundary />}
+            >
+                <Route path="profile" element={<Profile />} errorElement={<ErrorBoundary />} />
+                <Route
+                    path="events"
+                    element={<Events />}
+                    loader={async () => {
+                        const events = await fetchEvents();
+                        return events.data;
+                    }}
+                    errorElement={<ErrorBoundary />}
+                />
+                <Route path="events/:id" element={<Event />} errorElement={<ErrorBoundary />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+        </Route>
+    )
+);
 
 function App() {
     return (

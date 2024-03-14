@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setToken } from "../../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import { authenticate } from "../../api/api";
+import { CompanyLogo } from "../../components/CompanyLogo";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -29,7 +30,7 @@ const Login = () => {
                         user: response.data.user,
                     })
                 );
-                navigate("/profile", { replace: true });
+                navigate("/dashboard/profile", { replace: true });
             } else {
                 console.error("Login failed");
                 setError("");
@@ -42,6 +43,7 @@ const Login = () => {
 
     return (
         <div className={styles.container}>
+            <CompanyLogo />
             <div className={styles.form}>
                 <h1>Log in</h1>
                 <label className={styles.label}>

@@ -1,11 +1,10 @@
 import { Outlet } from "react-router-dom";
 import styles from "./layout.module.css";
-import { CompanyLogo } from "./CompanyLogo";
 export const Layout = () => {
     return (
         <div className={styles.container}>
             <nav className={styles.nav}>
-                <CompanyLogo />
+                <img style={{ height: "50px", margin: "10px" }} src={"/bluelogo.svg"} alt="combitrainer" />
             </nav>
             <Outlet></Outlet>
             <footer className={styles.footer}>
