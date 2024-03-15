@@ -114,6 +114,15 @@ export const editEvent = (data: Partial<Event>, id?: number): ApiResponse<Event>
 
 export const deleteEvent = (id?: number): ApiResponse<void> => api.delete(`events/${id}`);
 
+export const filteredUsers = (searchQuery: string) => {
+    let url = "filtered-friends";
+
+    if (searchQuery) {
+        url += `?q=${searchQuery}`;
+    }
+    return api.get(url);
+};
+
 // Team endpoints
 export const isInTeam = (eventId?: number): ApiResponse<boolean> => api.get<boolean>(`events/${eventId}/is_in_team`);
 

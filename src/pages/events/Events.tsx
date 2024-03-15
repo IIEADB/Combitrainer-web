@@ -3,6 +3,8 @@ import styles from "./events.module.css";
 import {
     Box,
     Container,
+    Grid,
+    IconButton,
     Paper,
     Table,
     TableBody,
@@ -12,7 +14,9 @@ import {
     TableRow,
     TableSortLabel,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
+import { deleteEvent } from "../../api/api";
 
 export const Events = () => {
     const navigate = useNavigate();
@@ -37,9 +41,18 @@ export const Events = () => {
         return 0;
     });
 
+    const handleDeleteEvent = async (id: number) => {
+        try {
+            await deleteEvent(id);
+            navigate("/dashboard/events", { replace: true });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
-        <Container>
-            <Box>
+        <Grid container spacing={1} sx={{ margin: "10px" }}>
+            <Grid item>
                 <h1 className={styles.title}>Events</h1>
                 <TableContainer component={Paper}>
                     <Table>
@@ -99,6 +112,7 @@ export const Events = () => {
                                         Team Event?
                                     </TableSortLabel>
                                 </TableCell>
+                                <TableCell>Delete event</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -126,13 +140,25 @@ export const Events = () => {
                                         <TableCell>{endDateFormatted}</TableCell>
                                         <TableCell>{event.creator?.username}</TableCell>
                                         <TableCell>{event.team_event ? "Yes" : "No"}</TableCell>
+                                        <TableCell>
+                                            <IconButton
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevents row click navigation
+                                                    handleDeleteEvent(event.id);
+                                                }}
+                                                aria-label="delete"
+                                                size="large"
+                                            >
+                                                <DeleteIcon style={{ color: "red" }} />
+                                            </IconButton>
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Box>
-        </Container>
+            </Grid>
+        </Grid>
     );
 };
