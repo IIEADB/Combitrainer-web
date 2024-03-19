@@ -17,7 +17,7 @@ import styles from "./userlist.module.css";
 import { useEffect, useState } from "react";
 import { filteredUsers } from "../api/api";
 
-export const UserList = ({ onSubmit, onClose }) => {
+export const UserList = (props: { onSubmit: (ids: number[]) => void; onClose: () => void }) => {
     const [userlist, setUserlist] = useState([]);
     const [selected, setSelected] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
@@ -87,7 +87,11 @@ export const UserList = ({ onSubmit, onClose }) => {
                         onChange={handleSearchInputChange}
                         style={{ marginBottom: "20px" }} // Add some space below the search bar
                     />
-                    <Button disabled={selected.length === 0} variant="contained" onClick={() => onSubmit(selected)}>
+                    <Button
+                        disabled={selected.length === 0}
+                        variant="contained"
+                        onClick={() => props.onSubmit(selected)}
+                    >
                         Add
                     </Button>
                 </Box>

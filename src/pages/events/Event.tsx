@@ -70,11 +70,13 @@ export const Event = () => {
         setSelected(newSelected);
     };
 
-    const isSelected = (id) => selected.indexOf(id) !== -1;
+    const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
-    const handleAddUsers = async (userIds) => {
+    const handleAddUsers = async (userIds: number[]) => {
         try {
-            const response = await createInvitation(eventId, 30, 1, userIds);
+            userIds.map(async (id) => {
+                Promise.all([await createInvitation(id)]);
+            });
             setLeaderboard(response.data.leaderboard);
             setShowUserList(false);
         } catch (error) {

@@ -36,7 +36,7 @@ const router = createBrowserRouter(
                     }}
                     errorElement={<ErrorBoundary />}
                 />
-                <Route path="events/:id" element={<Event />} errorElement={<ErrorBoundary />} />
+                <Route path="/dashboard/events/:eventId" element={<Event />} errorElement={<ErrorBoundary />} />
             </Route>
             <Route path="*" element={<NotFound />} />
         </Route>
