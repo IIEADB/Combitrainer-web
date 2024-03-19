@@ -8,7 +8,16 @@ interface ProtectedRouteProps {
 
 function ProtectedRoute({ children }: ProtectedRouteProps) {
     const isAuthenticated = useSelector((state: RootState) => state.isAuthenticated);
-    return isAuthenticated ? children : <Navigate to="/" />;
+    const isVerified = useSelector((state: RootState) => state.isOTPVerified);
+
+    if (!isAuthenticated) {
+        return <Navigate to="/" />;
+    }
+    if (!isVerified) {
+        return <Navigate to="/otp" />;
+    }
+
+    return children;
 }
 
 export default ProtectedRoute;

@@ -1,6 +1,7 @@
 import styles from "./companylogo.module.css"; // Importing CSS from external .css file
 
 export const CompanyLogo = () => {
+    //TODO: center text with grid
     return (
         <div className={styles.container}>
             <img style={{ width: "20vw", minWidth: "250px" }} alt="combitrainer" src={"/bluelogo.svg"} />
