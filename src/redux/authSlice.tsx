@@ -4,7 +4,8 @@ interface AuthState {
     token: string | null;
     refreshToken: string | "";
     isAuthenticated: boolean;
-    user: any;
+    user: Partial<User> | null;
+    isOTPVerified: boolean;
 }
 
 const initialState: AuthState = {
@@ -12,13 +13,14 @@ const initialState: AuthState = {
     refreshToken: "",
     isAuthenticated: false,
     user: null,
+    isOTPVerified: false,
 };
 
 const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        setToken(state, action: PayloadAction<{ token: string; refreshToken: string; user: any }>) {
+        setToken(state, action: PayloadAction<{ token: string; refreshToken: string; user: Partial<User> | null }>) {
             const { token, refreshToken, user } = action.payload;
             state.token = token;
             state.refreshToken = refreshToken;
@@ -31,8 +33,11 @@ const authSlice = createSlice({
             state.isAuthenticated = false;
             state.user = null;
         },
+        setIsOTPVerified(state, action: PayloadAction<boolean>) {
+            state.isOTPVerified = action.payload;
+        },
     },
 });
 
-export const { setToken, clearToken } = authSlice.actions;
+export const { setToken, clearToken, setIsOTPVerified } = authSlice.actions;
 export default authSlice.reducer;
