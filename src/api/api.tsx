@@ -19,9 +19,7 @@ api.interceptors.response.use(
                 try {
                     // Access the auth state directly
                     const refreshToken = store.getState().refreshToken;
-                    const response = await apiAuth.post("login/refresh", {
-                        refresh: refreshToken,
-                    });
+                    const response = await refresh({ refresh: refreshToken });
 
                     // Access the auth state directly
                     const auth = store.getState();
@@ -61,6 +59,8 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+export const refresh = (data: RefreshData): ApiResponse<{ access: string; refresh: string; user: User }> =>
+    apiAuth.post<{ access: string; refresh: string; user: User }>("login/refresh", data);
 // Authentication endpoints
 export const authenticate = (data: LoginData): ApiResponse<{ access: string; refresh: string; user: User }> =>
     apiAuth.post<{ access: string; refresh: string; user: User }>("login", data);
@@ -71,26 +71,21 @@ export const fetchUserProfile = (): ApiResponse<User> => api.get<User>("user");
 
 export const updateUserProfile = (data: Partial<User>): ApiResponse<User> => api.put<User>("user", data);
 
-export const otpVerify = (data: any): ApiResponse<any> => api.post("otp_verify", data); // Replace 'any' with an appropriate type
+export const userExists = (data: Partial<User>): ApiResponse<User> => {
+    let url = "user/exists";
+    url += `?username=${data.username}&email=${data.email}`;
+    return api.get<User>(url);
+};
 
-export const otpResend = (data: any): ApiResponse<any> => api.post("otp_resend", data); // Replace 'any' with an appropriate type
+export const otpVerify = (data: OTP): ApiResponse<{ message: string }> => api.post("otp_verify", data); // Replace 'any' with an appropriate type
+
+export const otpResend = (): ApiResponse<{ message: string }> => api.post("otp_resend"); // Replace 'any' with an appropriate type
 
 export const passwordResetRequest = (data: any): ApiResponse<any> => api.post("pwd_reset", data); // Replace 'any' with an appropriate type
 
 export const passwordResetVerifyAndChange = (data: any): ApiResponse<any> => api.put("pwd_reset", data); // Replace 'any' with an appropriate type
 
 export const deleteAccount = (id?: number): ApiResponse<void> => api.delete(`user/delete/${id}`);
-
-export const userExists = (data: { username?: string; email?: string }): ApiResponse<boolean> => {
-    let url = "user/exists";
-    if (data.username) {
-        url += `?username=${data.username}`;
-    }
-    if (data.email) {
-        url += `&email=${data.email}`;
-    }
-    return api.get<boolean>(url);
-};
 
 // Leaderboard endpoints
 export const fetchLeaderboard = (event?: string, period?: string, page?: number): ApiResponse<any> =>

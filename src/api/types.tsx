@@ -1,4 +1,7 @@
 interface User {
+    access: any;
+    refresh: any;
+    user: any;
     id?: number;
     username?: string;
     achievements?: EarnedAchievement[];
@@ -8,6 +11,11 @@ interface User {
     otp_session?: string;
     private?: boolean;
     visible_on_leaderboard?: boolean;
+    email?: string;
+}
+
+interface OTP {
+    otp: string;
 }
 
 interface AuthState {
@@ -20,6 +28,10 @@ interface AuthState {
 interface LoginData {
     username: string;
     password: string;
+}
+
+interface RefreshData {
+    refresh: string;
 }
 
 interface SignUpData {
