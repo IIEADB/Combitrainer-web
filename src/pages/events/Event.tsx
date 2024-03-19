@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createInvitation, deleteEvent, fetchLeaderboard } from "../../api/api";
+import { createInvitation, deleteEvent, deleteInvitation, fetchInvitations } from "../../api/api";
 import {
     Box,
     Button,
@@ -16,10 +16,10 @@ import {
     TableSortLabel,
 } from "@mui/material";
 import styles from "./events.module.css";
-import { UserList } from "../../components/UserList";
+import { UserList } from "./UserList";
 
 export const Event = () => {
-    const [leaderboard, setLeaderboard] = useState([]);
+    const [participationList, setParticipationList] = useState([]);
     const [selected, setSelected] = useState([]);
     const [showUserList, setShowUserList] = useState(false);
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
@@ -28,8 +28,13 @@ export const Event = () => {
     const navigate = useNavigate();
     const fetchEvent = async () => {
         try {
-            const response = await fetchLeaderboard(eventId, 30, 1);
-            setLeaderboard(response.data.leaderboard);
+            const response = await fetchInvitations(eventId);
+            setParticipationList(
+                response.data.sent_requests.accepted
+                    .concat(response.data.received_requests.accepted)
+                    .concat(response.data.sent_requests.pending.concat(response.data.received_requests.pending))
+                    .concat(response.data.sent_requests.rejected.concat(response.data.received_requests.rejected))
+            );
         } catch (error) {
             console.error(error);
         }
@@ -46,7 +51,7 @@ export const Event = () => {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = leaderboard.map((n) => n.id);
+            const newSelecteds = participationList.map((n) => n.id);
             setSelected(newSelecteds);
             return;
         }
@@ -72,18 +77,6 @@ export const Event = () => {
 
     const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
-    const handleAddUsers = async (userIds: number[]) => {
-        try {
-            userIds.map(async (id) => {
-                Promise.all([await createInvitation(id)]);
-            });
-            setLeaderboard(response.data.leaderboard);
-            setShowUserList(false);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     const handleDeleteEvent = async () => {
         try {
             await deleteEvent(eventId);
@@ -93,18 +86,36 @@ export const Event = () => {
         }
     };
 
+    const handleDeleteUserInvitation = async () => {
+        try {
+            await Promise.all(
+                selected.map(async (requestId) => {
+                    let response = await deleteInvitation(requestId);
+                    return response;
+                })
+            );
+            navigate(0);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <Grid container spacing={1} sx={{ margin: "10px" }}>
             <Grid item xs={6}>
-                <h1 className={styles.title}>Event Leaderboard</h1>
+                <h1 className={styles.title}>Event participation list</h1>
                 <TableContainer component={Paper} sx={{ maxHeight: "50vh" }}>
                     <Table>
                         <TableHead>
                             <TableRow>
                                 <TableCell padding="checkbox">
                                     <Checkbox
-                                        indeterminate={selected.length > 0 && selected.length < leaderboard.length}
-                                        checked={leaderboard.length > 0 && selected.length === leaderboard.length}
+                                        indeterminate={
+                                            selected.length > 0 && selected.length < participationList.length
+                                        }
+                                        checked={
+                                            participationList.length > 0 && selected.length === participationList.length
+                                        }
                                         onChange={handleSelectAllClick}
                                     />
                                 </TableCell>
@@ -124,19 +135,19 @@ export const Event = () => {
                                         direction={valueToOrderBy === "points" ? orderDirection : "asc"}
                                         onClick={() => handleRequestSort("points")}
                                     >
-                                        Points
+                                        Status
                                     </TableSortLabel>
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {leaderboard.map((user) => {
-                                const isItemSelected = isSelected(user.id);
+                            {participationList.map((request) => {
+                                const isItemSelected = isSelected(request.id);
                                 return (
                                     <TableRow
-                                        key={user.id}
+                                        key={request.id}
                                         hover
-                                        onClick={(event) => handleClick(event, user.id)}
+                                        onClick={(event) => handleClick(event, request.id)}
                                         role="checkbox"
                                         aria-checked={isItemSelected}
                                         tabIndex={-1}
@@ -145,8 +156,8 @@ export const Event = () => {
                                         <TableCell padding="checkbox">
                                             <Checkbox checked={isItemSelected} />
                                         </TableCell>
-                                        <TableCell>{user.username}</TableCell>
-                                        <TableCell>{user.points}</TableCell>
+                                        <TableCell>{request.joining_user.username}</TableCell>
+                                        <TableCell>{request.status}</TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -155,7 +166,7 @@ export const Event = () => {
                 </TableContainer>
                 <Box>
                     {selected.length > 0 && (
-                        <Button variant="contained" color="error" onClick={() => {}}>
+                        <Button variant="contained" color="error" onClick={() => handleDeleteUserInvitation()}>
                             Remove {selected.length} user(s)
                         </Button>
                     )}
@@ -168,26 +179,10 @@ export const Event = () => {
                     >
                         Delete event
                     </Button>
-                    <Button
-                        variant="contained"
-                        color="info"
-                        onClick={() => {
-                            setShowUserList(!showUserList);
-                        }}
-                    >
-                        Add users
-                    </Button>
                 </Box>
             </Grid>
             <Grid item xs={6}>
-                {showUserList && (
-                    <UserList
-                        onSubmit={(userList) => {
-                            handleAddUsers(userList), setShowUserList(!showUserList);
-                        }}
-                        onClose={() => setShowUserList(false)}
-                    />
-                )}
+                <UserList eventId={eventId} />
             </Grid>
         </Grid>
     );

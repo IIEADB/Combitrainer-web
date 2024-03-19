@@ -26,7 +26,6 @@ export const Events = () => {
     const navigate = useNavigate();
     const events = useLoaderData() as Event[];
     const authenticatedUser = useSelector((state: RootState) => state.user);
-
     const handleDeleteEvent = async (id: number) => {
         try {
             await deleteEvent(id);
