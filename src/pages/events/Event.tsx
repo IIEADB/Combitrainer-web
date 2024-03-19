@@ -108,15 +108,7 @@ export const Event = () => {
                                         onChange={handleSelectAllClick}
                                     />
                                 </TableCell>
-                                <TableCell>
-                                    <TableSortLabel
-                                        active={valueToOrderBy === "id"}
-                                        direction={valueToOrderBy === "id" ? orderDirection : "asc"}
-                                        onClick={() => handleRequestSort("id")}
-                                    >
-                                        ID
-                                    </TableSortLabel>
-                                </TableCell>
+
                                 <TableCell>
                                     <TableSortLabel
                                         active={valueToOrderBy === "name"}
@@ -153,7 +145,6 @@ export const Event = () => {
                                         <TableCell padding="checkbox">
                                             <Checkbox checked={isItemSelected} />
                                         </TableCell>
-                                        <TableCell>{user.id}</TableCell>
                                         <TableCell>{user.username}</TableCell>
                                         <TableCell>{user.points}</TableCell>
                                     </TableRow>

@@ -17,13 +17,16 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
-import { deleteEvent } from "../../api/api";
+import { deleteEvent, createEvent } from "../../api/api";
 import { CreateEventModal } from "./CreateEventModal";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 export const Events = () => {
     const navigate = useNavigate();
     const events = useLoaderData() as Event[];
-    const [showCreateEventModal, setShowCreateEventModal] = useState(false);
+    const authenticatedUser = useSelector((state: RootState) => state.user);
+
     const handleDeleteEvent = async (id: number) => {
         try {
             await deleteEvent(id);
@@ -37,26 +40,21 @@ export const Events = () => {
         <Grid container spacing={1} sx={{ margin: "10px" }}>
             <Grid item>
                 <h1 className={styles.title}>Events</h1>
-                <EventsTable events={events} navigate={navigate} handleDeleteEvent={handleDeleteEvent} />
+                <EventsTable
+                    events={events}
+                    navigate={navigate}
+                    handleDeleteEvent={handleDeleteEvent}
+                    authenticatedUser={authenticatedUser}
+                />
             </Grid>
+            <Grid item></Grid>
             <Grid item>
-                <Button variant="contained" onClick={() => setShowCreateEventModal(true)}>
-                    Create Event
-                </Button>
+                <CreateEventModal />
             </Grid>
-            {showCreateEventModal && (
-                <Grid item>
-                    <CreateEventModal
-                        open={showCreateEventModal}
-                        onClose={() => setShowCreateEventModal(false)}
-                        onSubmit={() => setShowCreateEventModal(false)}
-                    />
-                </Grid>
-            )}
         </Grid>
     );
 };
-function EventsTable({ events, navigate, handleDeleteEvent }: any) {
+function EventsTable({ events, navigate, handleDeleteEvent, authenticatedUser }: any) {
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
     const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
 
@@ -80,15 +78,6 @@ function EventsTable({ events, navigate, handleDeleteEvent }: any) {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>
-                            <TableSortLabel
-                                active={valueToOrderBy === "id"}
-                                direction={valueToOrderBy === "id" ? orderDirection : "asc"}
-                                onClick={() => handleRequestSort("id")}
-                            >
-                                ID
-                            </TableSortLabel>
-                        </TableCell>
                         <TableCell>
                             <TableSortLabel
                                 active={valueToOrderBy === "name"}
@@ -156,23 +145,24 @@ function EventsTable({ events, navigate, handleDeleteEvent }: any) {
                                 onClick={() => navigate(`/dashboard/events/${event.id}`)}
                                 style={{ cursor: "pointer" }}
                             >
-                                <TableCell>{event.id}</TableCell>
                                 <TableCell>{event.name}</TableCell>
                                 <TableCell>{startDateFormatted}</TableCell>
                                 <TableCell>{endDateFormatted}</TableCell>
                                 <TableCell>{event.creator?.username}</TableCell>
                                 <TableCell>{event.team_event ? "Yes" : "No"}</TableCell>
                                 <TableCell>
-                                    <IconButton
-                                        onClick={(e) => {
-                                            e.stopPropagation(); // Prevents row click navigation
-                                            handleDeleteEvent(event.id);
-                                        }}
-                                        aria-label="delete"
-                                        size="large"
-                                    >
-                                        <DeleteIcon style={{ color: "red" }} />
-                                    </IconButton>
+                                    {authenticatedUser?.id === event.creator?.id && (
+                                        <IconButton
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteEvent(event.id);
+                                            }}
+                                            aria-label="delete"
+                                            size="large"
+                                        >
+                                            <DeleteIcon style={{ color: "red" }} />
+                                        </IconButton>
+                                    )}
                                 </TableCell>
                             </TableRow>
                         );
