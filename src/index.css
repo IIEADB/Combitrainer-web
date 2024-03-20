@@ -8,3 +8,56 @@ body {
     line-height: 1.5715;
     font-feature-settings: "tnum";
 }
+
+html {
+    min-height: 100%;
+}
+
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+:root {
+    --primary-color_0: #6CCBF4;
+    --primary-color_1: #99DAF6;
+    --primary-color_2: #81D2F4;
+    --primary-color_3: #58C5F5;
+    --primary-color_4: #44C0F6;
+    
+    --secondary-color1_0: #72ADF5;
+    --secondary-color1_1: #9DC5F6;
+    --secondary-color1_2: #86B8F5;
+    --secondary-color1_3: #5EA3F5;
+    --secondary-color1_4: #4B99F6;
+
+    --secondary-color2_0: #66F4E5;
+    --secondary-color2_1: #94F5EB;
+    --secondary-color2_2: #7BF4E7;
+    --secondary-color2_3: #51F4E3;
+    --secondary-color2_4: #3CF5E2;
+
+    --complement-color_0: #FFB96A;
+    --complement-color_1: #FFCF9A;
+    --complement-color_2: #FFC381;
+    --complement-color_3: #FFAE54;
+    --complement-color_4: #FFA43E;
+
+    --background-color_primary: white;
+    --background-color_main: #F2F4F8;
+
+    --gapSize-small: 5px;
+    --gapSize-medium: 10px;
+    --gapSize-large: 20px;
+
+    --font_size-small: 12px;
+    --font_size-medium: 16px;
+    --font_size-large: 20px;
+    --font_size_extraLarge: 24px;
+    --font_size_extraExtraLarge: 35px;
+    
+    --font_weight_normal: normal;
+    --font_weight_halfBold: 500;
+    --font_weight_bold: bold;
+}
