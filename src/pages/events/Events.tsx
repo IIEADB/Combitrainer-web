@@ -21,14 +21,23 @@ import { deleteEvent, createEvent } from "../../api/api";
 import { CreateEventModal } from "./CreateEventModal";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { ConfirmationDialog } from "../../components/ConfirmationDialog";
 
 export const Events = () => {
     const navigate = useNavigate();
     const events = useLoaderData() as Event[];
     const authenticatedUser = useSelector((state: RootState) => state.user);
-    const handleDeleteEvent = async (id: number) => {
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+    const [selectedEventId, setSelectedEventId] = useState(0);
+
+    const handleConfirmDelete = async (id: number) => {
+        setSelectedEventId(id);
+        setShowConfirmationDialog(true);
+    };
+    const handleDeleteEvent = async () => {
         try {
-            await deleteEvent(id);
+            await deleteEvent(selectedEventId);
+            setShowConfirmationDialog(false);
             navigate("/dashboard/events", { replace: true });
         } catch (error) {
             console.error(error);
@@ -37,12 +46,17 @@ export const Events = () => {
 
     return (
         <Grid container spacing={1} sx={{ margin: "10px" }}>
+            <ConfirmationDialog
+                open={showConfirmationDialog}
+                onClose={() => setShowConfirmationDialog(false)}
+                onConfirm={() => handleDeleteEvent()}
+            />
             <Grid item>
                 <h1 className={styles.title}>Events</h1>
                 <EventsTable
                     events={events}
                     navigate={navigate}
-                    handleDeleteEvent={handleDeleteEvent}
+                    handleConfirmDelete={handleConfirmDelete}
                     authenticatedUser={authenticatedUser}
                 />
             </Grid>
@@ -53,7 +67,7 @@ export const Events = () => {
         </Grid>
     );
 };
-function EventsTable({ events, navigate, handleDeleteEvent, authenticatedUser }: any) {
+function EventsTable({ events, navigate, handleConfirmDelete, authenticatedUser }: any) {
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
     const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
 
@@ -154,7 +168,7 @@ function EventsTable({ events, navigate, handleDeleteEvent, authenticatedUser }:
                                         <IconButton
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                handleDeleteEvent(event.id);
+                                                handleConfirmDelete(event.id);
                                             }}
                                             aria-label="delete"
                                             size="large"

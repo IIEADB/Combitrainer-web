@@ -6,6 +6,7 @@ import { UserList } from "./UserList";
 import { ParticipationList } from "./ParticipationList";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Overview } from "./Overview";
+import { TeamList } from "./TeamList";
 
 export const Event = () => {
     const { eventId } = useParams();
@@ -58,7 +59,7 @@ export const Event = () => {
                     </Grid>
                 </TabPanel>
                 <TabPanel value="2">
-                    <p>teams</p>
+                    <TeamList event={state.event} navigate={navigate} />
                 </TabPanel>
             </TabContext>
         </Box>
