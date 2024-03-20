@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { createInvitation, filteredUsers } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 
-export const UserList = (props: { eventId?: string }) => {
+export const UserList = (props: { eventId?: string; participationList?: any }) => {
     const [userlist, setUserlist] = useState([]);
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState([]);
@@ -31,7 +31,7 @@ export const UserList = (props: { eventId?: string }) => {
     const fetchUserList = async () => {
         try {
             const response = await filteredUsers(searchQuery);
-            setUserlist(response.data);
+            filterUserList(props.participationList, response.data);
         } catch (error) {
             console.error(error);
         }
@@ -96,6 +96,15 @@ export const UserList = (props: { eventId?: string }) => {
         setSearchQuery(event.target.value);
     };
 
+    function filterUserList(invitationsData, userList) {
+        console.log(invitationsData);
+        console.log(userList);
+        const updatedUserList = userList?.filter((user) => {
+            return !invitationsData.some((request) => request.joining_user.id === user.id);
+        });
+        setUserlist(updatedUserList);
+    }
+
     return (
         <Box>
             <Button
@@ -111,7 +120,7 @@ export const UserList = (props: { eventId?: string }) => {
                 <>
                     <h1 className={styles.title}>Add users</h1>
                     <Button disabled={selected.length === 0} variant="contained" onClick={() => handleAddUsers()}>
-                        Add {selected.length} users
+                        Send request to {selected.length} users
                     </Button>
                     <Box sx={{ backgroundColor: "white" }}>
                         <Box sx={{ display: "flex", flexDirection: "row" }}>

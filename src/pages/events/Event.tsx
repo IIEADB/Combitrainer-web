@@ -25,9 +25,11 @@ export const Event = () => {
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
     const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
     const { eventId } = useParams();
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const fetchEvent = async () => {
         try {
+            setIsLoading(true);
             const response = await fetchInvitations(eventId);
             setParticipationList(
                 response.data.sent_requests.accepted
@@ -35,7 +37,9 @@ export const Event = () => {
                     .concat(response.data.sent_requests.pending.concat(response.data.received_requests.pending))
                     .concat(response.data.sent_requests.rejected.concat(response.data.received_requests.rejected))
             );
+            setIsLoading(false);
         } catch (error) {
+            setIsLoading(false);
             console.error(error);
         }
     };
@@ -182,7 +186,7 @@ export const Event = () => {
                 </Box>
             </Grid>
             <Grid item xs={6}>
-                <UserList eventId={eventId} />
+                {!isLoading && <UserList eventId={eventId} participationList={participationList} />}
             </Grid>
         </Grid>
     );
