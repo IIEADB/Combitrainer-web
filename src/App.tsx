@@ -4,7 +4,7 @@ import { store, persistor } from "./redux/store";
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import Profile from "./pages/profile/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { Layout } from "./components/Layout";
+import { Layout } from "./components/Layout/Layout";
 import { NotFound } from "./components/NotFound";
 import { Dashboard } from "./pages/dashboard/Dashboard";
 import { Events } from "./pages/events/Events";
@@ -21,12 +21,12 @@ const router = createBrowserRouter(
             <Route index={true} element={<Login />} errorElement={<ErrorBoundary />} />
             <Route path="signup" element={<SignUp />} errorElement={<ErrorBoundary />} />
             <Route path="otp" element={<OTP />} errorElement={<ErrorBoundary />} />
-            <Route element={<Layout />}>
+            <Route >
                 <Route
                     path="dashboard"
                     element={
                         <ProtectedRoute>
-                            <Dashboard />
+                            <Layout />
                         </ProtectedRoute>
                     }
                     errorElement={<ErrorBoundary />}
