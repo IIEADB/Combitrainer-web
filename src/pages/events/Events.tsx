@@ -141,7 +141,7 @@ function EventsTable({ events, navigate, handleDeleteEvent, authenticatedUser }:
                             <TableRow
                                 key={event.id}
                                 hover
-                                onClick={() => navigate(`/dashboard/events/${event.id}`)}
+                                onClick={() => navigate(`/dashboard/events/${event.id}`, { state: { event: event } })}
                                 style={{ cursor: "pointer" }}
                             >
                                 <TableCell>{event.name}</TableCell>

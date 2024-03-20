@@ -1,33 +1,21 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { createInvitation, deleteEvent, deleteInvitation, fetchInvitations } from "../../api/api";
-import {
-    Box,
-    Button,
-    Checkbox,
-    Grid,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TableSortLabel,
-} from "@mui/material";
-import styles from "./events.module.css";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { createInvitation, deleteEvent, fetchInvitations } from "../../api/api";
+import { Box, Button, Grid, Tab, Tabs } from "@mui/material";
 import { UserList } from "./UserList";
+import { ParticipationList } from "./ParticipationList";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Overview } from "./Overview";
 
 export const Event = () => {
-    const [participationList, setParticipationList] = useState([]);
-    const [selected, setSelected] = useState([]);
-    const [showUserList, setShowUserList] = useState(false);
-    const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
-    const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
     const { eventId } = useParams();
+    const { state } = useLocation();
     const [isLoading, setIsLoading] = useState(true);
+    const [participationList, setParticipationList] = useState([]);
+    const [selectedTab, setSelectedTab] = useState("0");
     const navigate = useNavigate();
-    const fetchEvent = async () => {
+
+    const fetchInvites = async () => {
         try {
             setIsLoading(true);
             const response = await fetchInvitations(eventId);
@@ -44,150 +32,35 @@ export const Event = () => {
         }
     };
     useEffect(() => {
-        fetchEvent();
+        fetchInvites();
     }, [eventId]);
 
-    const handleRequestSort = (property: string) => {
-        const isAscending = valueToOrderBy === property && orderDirection === "asc";
-        setValueToOrderBy(property);
-        setOrderDirection(isAscending ? "desc" : "asc");
-    };
-
-    const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
-            const newSelecteds = participationList.map((n) => n.id);
-            setSelected(newSelecteds);
-            return;
-        }
-        setSelected([]);
-    };
-
-    const handleClick = (event, id) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-        }
-
-        setSelected(newSelected);
-    };
-
-    const isSelected = (id: number) => selected.indexOf(id) !== -1;
-
-    const handleDeleteEvent = async () => {
-        try {
-            await deleteEvent(eventId);
-            navigate(`/dashboard/events/`, { replace: true });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const handleDeleteUserInvitation = async () => {
-        try {
-            await Promise.all(
-                selected.map(async (requestId) => {
-                    let response = await deleteInvitation(requestId);
-                    return response;
-                })
-            );
-            navigate(0);
-        } catch (error) {
-            console.error(error);
-        }
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+        setSelectedTab(newValue);
     };
 
     return (
-        <Grid container spacing={1} sx={{ margin: "10px" }}>
-            <Grid item xs={6}>
-                <h1 className={styles.title}>Event participation list</h1>
-                <TableContainer component={Paper} sx={{ maxHeight: "50vh" }}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell padding="checkbox">
-                                    <Checkbox
-                                        indeterminate={
-                                            selected.length > 0 && selected.length < participationList.length
-                                        }
-                                        checked={
-                                            participationList.length > 0 && selected.length === participationList.length
-                                        }
-                                        onChange={handleSelectAllClick}
-                                    />
-                                </TableCell>
+        <Box sx={{ width: "100%" }}>
+            <TabContext value={selectedTab}>
+                <TabList onChange={handleTabChange}>
+                    <Tab label="Overview" value={"0"} />
 
-                                <TableCell>
-                                    <TableSortLabel
-                                        active={valueToOrderBy === "name"}
-                                        direction={valueToOrderBy === "name" ? orderDirection : "asc"}
-                                        onClick={() => handleRequestSort("name")}
-                                    >
-                                        Username
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell>
-                                    <TableSortLabel
-                                        active={valueToOrderBy === "points"}
-                                        direction={valueToOrderBy === "points" ? orderDirection : "asc"}
-                                        onClick={() => handleRequestSort("points")}
-                                    >
-                                        Status
-                                    </TableSortLabel>
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {participationList.map((request) => {
-                                const isItemSelected = isSelected(request.id);
-                                return (
-                                    <TableRow
-                                        key={request.id}
-                                        hover
-                                        onClick={(event) => handleClick(event, request.id)}
-                                        role="checkbox"
-                                        aria-checked={isItemSelected}
-                                        tabIndex={-1}
-                                        selected={isItemSelected}
-                                    >
-                                        <TableCell padding="checkbox">
-                                            <Checkbox checked={isItemSelected} />
-                                        </TableCell>
-                                        <TableCell>{request.joining_user.username}</TableCell>
-                                        <TableCell>{request.status}</TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Box>
-                    {selected.length > 0 && (
-                        <Button variant="contained" color="error" onClick={() => handleDeleteUserInvitation()}>
-                            Remove {selected.length} user(s)
-                        </Button>
-                    )}
-                    <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => {
-                            handleDeleteEvent();
-                        }}
-                    >
-                        Delete event
-                    </Button>
-                </Box>
-            </Grid>
-            <Grid item xs={6}>
-                {!isLoading && <UserList eventId={eventId} participationList={participationList} />}
-            </Grid>
-        </Grid>
+                    <Tab label="Participants" value={"1"} />
+                    <Tab label="Teams" value={"2"}></Tab>
+                </TabList>
+                <TabPanel value="0">{!isLoading && <Overview event={state.event} navigate={navigate} />}</TabPanel>
+                <TabPanel value="1">
+                    <Grid container spacing={1} sx={{ margin: "10px" }}>
+                        <ParticipationList participationList={participationList} navigate={navigate} />
+                        <Grid item xs={6}>
+                            {!isLoading && <UserList eventId={eventId} participationList={participationList} />}
+                        </Grid>
+                    </Grid>
+                </TabPanel>
+                <TabPanel value="2">
+                    <p>teams</p>
+                </TabPanel>
+            </TabContext>
+        </Box>
     );
 };

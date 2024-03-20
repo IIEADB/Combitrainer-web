@@ -97,8 +97,6 @@ export const UserList = (props: { eventId?: string; participationList?: any }) =
     };
 
     function filterUserList(invitationsData, userList) {
-        console.log(invitationsData);
-        console.log(userList);
         const updatedUserList = userList?.filter((user) => {
             return !invitationsData.some((request) => request.joining_user.id === user.id);
         });
