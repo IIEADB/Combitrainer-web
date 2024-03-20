@@ -1,0 +1,24 @@
+default_install_hook_types: [commit-msg, post-merge, post-rewrite]
+repos:
+    - repo: https://github.com/xDeZex/giticket
+      rev: 1.3.6.3
+      hooks:
+          - id: giticket
+            args:
+                [
+                    "--regex=.+",
+                    "--format={ticket} (#{ticket_number}): {commit_msg}",
+                    "--mode=regex_match",
+                    "--ticket_number=^([0-9]+)-*",
+                ]
+            stages: [commit-msg]
+
+    - repo: local
+      hooks:
+          - id: install
+            name: install
+            entry: npm install
+            language: system
+            pass_filenames: false
+            always_run: true
+            stages: [post-merge, post-rewrite]
