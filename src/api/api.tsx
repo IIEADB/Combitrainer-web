@@ -88,7 +88,7 @@ export const passwordResetVerifyAndChange = (data: any): ApiResponse<any> => api
 export const deleteAccount = (id?: number): ApiResponse<void> => api.delete(`user/delete/${id}`);
 
 // Leaderboard endpoints
-export const fetchLeaderboard = (event?: string, period?: string, page?: number): ApiResponse<any> =>
+export const fetchLeaderboard = (event?: string, period?: number, page?: number): ApiResponse<any> =>
     api.get("leaderboard", { params: { event, period, page } }); // Replace 'any' with an appropriate type
 
 export const inspectProfile = (username?: string): ApiResponse<User> =>
@@ -121,12 +121,12 @@ export const filteredUsers = (searchQuery: string) => {
 // Team endpoints
 export const isInTeam = (eventId?: number): ApiResponse<boolean> => api.get<boolean>(`events/${eventId}/is_in_team`);
 
-export const fetchTeams = (eventId?: number, searchQuery?: string): ApiResponse<Team[]> => {
+export const fetchTeams = (eventId?: number, searchQuery?: string): ApiResponse<{ teams: Team[] }> => {
     let url = `events/${eventId}/teams`;
     if (searchQuery) {
         url += `?name=${searchQuery}`;
     }
-    return api.get<Team[]>(url);
+    return api.get<{ teams: Team[] }>(url);
 };
 
 export const createTeam = (data: any, eventId?: number): ApiResponse<Team> =>
@@ -146,9 +146,9 @@ export const removeTeamMember = (teamId?: number, userId?: number): ApiResponse<
 
 // Invitation endpoints
 export const fetchInvitations = (
-    id?: number
+    eventId?: number
 ): ApiResponse<any> => // Replace 'any' with an appropriate type
-    api.get(`events/${id}/invitations`);
+    api.get(`events/${eventId}/invitations`);
 
 export const createInvitation = (data: any): ApiResponse<any> => api.post("user/invitations", data); // Replace 'any' with an appropriate type
 

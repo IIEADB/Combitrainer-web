@@ -6,7 +6,6 @@ import Profile from "./pages/profile/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Layout } from "./components/Layout/Layout";
 import { NotFound } from "./components/NotFound";
-import { Dashboard } from "./pages/dashboard/Dashboard";
 import { Events } from "./pages/events/Events";
 import { fetchEvents } from "./api/api";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -21,7 +20,7 @@ const router = createBrowserRouter(
             <Route index={true} element={<Login />} errorElement={<ErrorBoundary />} />
             <Route path="signup" element={<SignUp />} errorElement={<ErrorBoundary />} />
             <Route path="otp" element={<OTP />} errorElement={<ErrorBoundary />} />
-            <Route >
+            <Route>
                 <Route
                     path="dashboard"
                     element={

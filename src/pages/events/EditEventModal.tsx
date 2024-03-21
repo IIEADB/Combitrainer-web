@@ -15,12 +15,11 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
-import { createEvent, deleteEvent, editEvent } from "../../api/api";
-import { useNavigate } from "react-router-dom";
+import { deleteEvent, editEvent } from "../../api/api";
 import dayjs from "dayjs";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
 
-export const EditEventModal = (props: { event: any; navigate?: any }) => {
+export const EditEventModal = (props: { event: Event; navigate?: any }) => {
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [formData, setFormData] = useState({
         name: props.event.name,
@@ -29,8 +28,8 @@ export const EditEventModal = (props: { event: any; navigate?: any }) => {
         end_date: props.event.end_date,
     });
     const [open, setOpen] = useState(false);
-    const handleSubmit = async (e: any) => {
-        e.preventDefault();
+    const handleSubmit = async (event: React.FormEvent<HTMLDivElement>) => {
+        event.preventDefault();
         await editEvent(formData, props.event.id);
         setOpen(false);
         props.navigate(`/dashboard/events/`, { replace: true });

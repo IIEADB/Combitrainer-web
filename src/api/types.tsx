@@ -2,7 +2,7 @@ interface User {
     access: any;
     refresh: any;
     user: any;
-    id?: number;
+    id: number;
     username?: string;
     achievements?: EarnedAchievement[];
     image?: string;
@@ -112,7 +112,7 @@ interface Event {
 }
 
 interface EventParticipationRequest {
-    id?: number;
+    id: number;
     event?: Event;
     from_user?: User;
     to_user?: User;
@@ -121,7 +121,7 @@ interface EventParticipationRequest {
 }
 
 interface Team {
-    id?: number;
+    id: number;
     name?: string;
     creator?: User;
     event?: Event;
