@@ -3,16 +3,16 @@ import { useState } from "react";
 import { createTeam } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 
-export const CreateTeamModal = (props: { eventId: string }) => {
+export const CreateTeamModal = (props: { eventId: number }) => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: "",
     });
     const [open, setOpen] = useState(false);
 
-    const handleSubmit = async (e: any) => {
-        e.preventDefault();
-        await createTeam(formData as any, props.eventId);
+    const handleSubmit = async (event: React.FormEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        await createTeam(formData, props.eventId);
         setOpen(false);
         navigate("/dashboard/events", { replace: true });
     };

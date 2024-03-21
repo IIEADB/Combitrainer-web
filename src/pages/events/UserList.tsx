@@ -2,7 +2,6 @@ import {
     Box,
     Button,
     Checkbox,
-    Grid,
     Paper,
     Table,
     TableBody,
@@ -19,9 +18,9 @@ import { createInvitation, filteredUsers } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 
 export const UserList = (props: { eventId?: string; participationList?: any }) => {
-    const [userlist, setUserlist] = useState([]);
+    const [userlist, setUserlist] = useState<User[]>([]);
     const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState([]);
+    const [selected, setSelected] = useState<number[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
     const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
@@ -47,9 +46,9 @@ export const UserList = (props: { eventId?: string; participationList?: any }) =
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
-    const handleSelectAllClick = (event) => {
+    const handleSelectAllClick = (event: { target: { checked: boolean } }) => {
         if (event.target.checked) {
-            const newSelecteds = userlist.map((n) => n.id);
+            const newSelecteds = userlist.map((n: { id: number }) => n.id!);
             setSelected(newSelecteds);
             return;
         }
@@ -60,7 +59,7 @@ export const UserList = (props: { eventId?: string; participationList?: any }) =
         try {
             await Promise.all(
                 selected.map(async (userId) => {
-                    let response = await createInvitation({
+                    const response = await createInvitation({
                         event: props.eventId,
                         to_user: userId,
                         joining_user: userId,
@@ -74,9 +73,9 @@ export const UserList = (props: { eventId?: string; participationList?: any }) =
         }
     };
 
-    const handleClick = (event, id) => {
+    const handleClick = (id: number) => {
         const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
+        let newSelected: number[] = [];
 
         if (selectedIndex === -1) {
             newSelected = newSelected.concat(selected, id);
@@ -91,14 +90,16 @@ export const UserList = (props: { eventId?: string; participationList?: any }) =
         setSelected(newSelected);
     };
 
-    const isSelected = (id) => selected.indexOf(id) !== -1;
-    const handleSearchInputChange = (event) => {
+    const isSelected = (id: number) => selected.indexOf(id) !== -1;
+    const handleSearchInputChange = (event: { target: { value: string } }) => {
         setSearchQuery(event.target.value);
     };
 
-    function filterUserList(invitationsData, userList) {
-        const updatedUserList = userList?.filter((user) => {
-            return !invitationsData.some((request) => request.joining_user.id === user.id);
+    function filterUserList(invitationsData: any[], userList: User[]) {
+        const updatedUserList = userList?.filter((user: Partial<User>) => {
+            return !invitationsData.some(
+                (request: Partial<EventParticipationRequest>) => request.joining_user?.id === user.id
+            );
         });
         setUserlist(updatedUserList);
     }
@@ -163,13 +164,13 @@ export const UserList = (props: { eventId?: string; participationList?: any }) =
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {userlist.map((user) => {
+                                    {userlist.map((user: User) => {
                                         const isItemSelected = isSelected(user.id);
                                         return (
                                             <TableRow
                                                 key={user.id}
                                                 hover
-                                                onClick={(event) => handleClick(event, user.id)}
+                                                onClick={() => handleClick(user.id)}
                                                 role="checkbox"
                                                 aria-checked={isItemSelected}
                                                 tabIndex={-1}

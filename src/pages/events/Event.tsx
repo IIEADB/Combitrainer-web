@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { createInvitation, deleteEvent, fetchInvitations } from "../../api/api";
-import { Box, Button, Grid, Tab, Tabs } from "@mui/material";
+import { fetchInvitations } from "../../api/api";
+import { Box, Grid, Tab } from "@mui/material";
 import { UserList } from "./UserList";
 import { ParticipationList } from "./ParticipationList";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
@@ -10,6 +10,7 @@ import { TeamList } from "./TeamList";
 
 export const Event = () => {
     const { eventId } = useParams();
+    const eventIdNumber: number | undefined = eventId ? parseInt(eventId, 10) : undefined;
     const { state } = useLocation();
     const [isLoading, setIsLoading] = useState(true);
     const [participationList, setParticipationList] = useState([]);
@@ -19,7 +20,7 @@ export const Event = () => {
     const fetchInvites = async () => {
         try {
             setIsLoading(true);
-            const response = await fetchInvitations(eventId);
+            const response = await fetchInvitations(eventIdNumber);
             setParticipationList(
                 response.data.sent_requests.accepted
                     .concat(response.data.received_requests.accepted)
@@ -36,7 +37,7 @@ export const Event = () => {
         fetchInvites();
     }, [eventId]);
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
         setSelectedTab(newValue);
     };
 

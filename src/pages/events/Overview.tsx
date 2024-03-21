@@ -1,27 +1,16 @@
-import { deleteEvent, fetchLeaderboard } from "../../api/api";
+import { fetchLeaderboard } from "../../api/api";
 import { useEffect, useState } from "react";
-import {
-    Box,
-    Button,
-    Checkbox,
-    Grid,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-} from "@mui/material";
+import { Box, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import styles from "./events.module.css";
 import { EditEventModal } from "./EditEventModal";
 import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 export const Overview = (props: { event?: any; navigate?: any }) => {
     const [leaderboard, setLeaderboard] = useState([]);
     const getLeaderboardData = async () => {
         try {
-            const response = await fetchLeaderboard(props.event.id, "9999", 1);
+            const response = await fetchLeaderboard(props.event.id, 9999, 1);
             setLeaderboard(response.data.leaderboard);
         } catch (error) {
             console.error(error);
@@ -50,7 +39,7 @@ export const Overview = (props: { event?: any; navigate?: any }) => {
                 {startDateFormatted} - {endDateFormatted}
             </h2>
             <Grid item>
-                {authenticatedUser.id === props.event.creator.id && (
+                {authenticatedUser?.id === props.event.creator.id && (
                     <EditEventModal event={props.event} navigate={props.navigate}></EditEventModal>
                 )}
             </Grid>
@@ -67,15 +56,17 @@ export const Overview = (props: { event?: any; navigate?: any }) => {
                             </TableHead>
                             <TableBody>
                                 {leaderboard.length > 0 &&
-                                    leaderboard.map((team, index) => {
-                                        return (
-                                            <TableRow key={team.id} hover>
-                                                <TableCell>{index + 1}</TableCell>
-                                                <TableCell>{team.team_name}</TableCell>
-                                                <TableCell>{team.points}</TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
+                                    leaderboard.map(
+                                        (team: { id: number; team_name: string; points: number }, index) => {
+                                            return (
+                                                <TableRow key={index} hover>
+                                                    <TableCell>{index + 1}</TableCell>
+                                                    <TableCell>{team.team_name}</TableCell>
+                                                    <TableCell>{team.points}</TableCell>
+                                                </TableRow>
+                                            );
+                                        }
+                                    )}
                             </TableBody>
                         </>
                     ) : (
@@ -89,7 +80,7 @@ export const Overview = (props: { event?: any; navigate?: any }) => {
                             </TableHead>
                             <TableBody>
                                 {leaderboard.length > 0 &&
-                                    leaderboard.map((user, index) => {
+                                    leaderboard.map((user: { id: number; username: string; points: number }, index) => {
                                         return (
                                             <TableRow key={user.id} hover>
                                                 <TableCell>{index + 1}</TableCell>

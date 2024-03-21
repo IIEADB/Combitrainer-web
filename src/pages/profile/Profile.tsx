@@ -9,7 +9,7 @@ const Profile = () => {
     const dispatch = useDispatch();
 
     const handleDeleteProfile = async () => {
-        deleteAccount(authenticatedUser.id);
+        deleteAccount(authenticatedUser?.id);
         setTimeout(() => {
             dispatch(clearToken());
         }, 1000);
