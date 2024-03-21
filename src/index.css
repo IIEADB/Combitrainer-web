@@ -60,4 +60,9 @@ html {
     --font_weight_normal: normal;
     --font_weight_halfBold: 500;
     --font_weight_bold: bold;
+
+    --borderRadius-small: 10px;
+    --borderRadius-medium: 23px;
+    --borderRadius-large: 30px;
+    --borderRadius-circle: 999999px;
 }

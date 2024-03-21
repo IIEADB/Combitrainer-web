@@ -14,6 +14,7 @@ import { Event } from "./pages/events/Event";
 import Login from "./pages/login/Login";
 import SignUp from "./pages/login/SignUp";
 import OTP from "./pages/login/OTP";
+import ProfileSettings from "./pages/profile/ProfileSettings";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -31,7 +32,7 @@ const router = createBrowserRouter(
                     }
                     errorElement={<ErrorBoundary />}
                 >
-                    <Route path="profile" element={<Profile />} errorElement={<ErrorBoundary />} />
+                    <Route path="profile" element={<ProfileSettings />} errorElement={<ErrorBoundary />} />
                     <Route
                         path="events"
                         element={<Events />}
