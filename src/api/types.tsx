@@ -12,6 +12,10 @@ interface User {
     private?: boolean;
     visible_on_leaderboard?: boolean;
     email?: string;
+    first_name?: string;
+    last_name?: string;
+    oldPassword?: string;
+    password?: string;
 }
 
 interface OTP {

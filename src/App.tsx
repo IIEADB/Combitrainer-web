@@ -2,7 +2,6 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./redux/store";
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
-import Profile from "./pages/profile/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Layout } from "./components/Layout/Layout";
 import { NotFound } from "./components/NotFound";
@@ -13,6 +12,7 @@ import { Event } from "./pages/events/Event";
 import Login from "./pages/login/Login";
 import SignUp from "./pages/login/SignUp";
 import OTP from "./pages/login/OTP";
+import ProfileSettings from "./pages/profile/ProfileSettings";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -30,7 +30,7 @@ const router = createBrowserRouter(
                     }
                     errorElement={<ErrorBoundary />}
                 >
-                    <Route path="profile" element={<Profile />} errorElement={<ErrorBoundary />} />
+                    <Route path="profile" element={<ProfileSettings />} errorElement={<ErrorBoundary />} />
                     <Route
                         path="events"
                         element={<Events />}
