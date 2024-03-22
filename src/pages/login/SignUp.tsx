@@ -12,6 +12,7 @@ import { signUp } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import { useState } from "react";
+import { PasswordInput } from "../../components/PasswordInput";
 
 const defaultTheme = createTheme();
 
@@ -24,7 +25,7 @@ export default function SignUp() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        handleSignUp(data.get("username") as string, data.get("email") as string, data.get("password") as string);
+        handleSignUp(data.get("username") as string, data.get("email") as string, data.get("Password") as string);
     };
 
     const handleSignUp = async (username: string, email: string, password: string) => {
@@ -100,16 +101,10 @@ export default function SignUp() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="new-password"
-                                    error={!!errorPassword}
-                                    helperText={errorPassword}
+                                <PasswordInput
+                                    name="Password"
+                                    passwordError={errorPassword}
+                                    margin="none"
                                 />
                             </Grid>
                         </Grid>

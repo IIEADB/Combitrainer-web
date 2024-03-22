@@ -27,10 +27,6 @@
     max-width: 100%;
 }
 
-.sendButton {
-    width: fit-content;
-}
-
 .contentContainer {
     display: flex;
     flex-direction: row;
@@ -61,6 +57,7 @@ button.tab {
     background-color: var(--background-color_primary);
     border-radius: var(--borderRadius-small);
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    height: fit-content;
 }
 
 .avatar {
