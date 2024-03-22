@@ -13,6 +13,7 @@ import Login from "./pages/login/Login";
 import SignUp from "./pages/login/SignUp";
 import OTP from "./pages/login/OTP";
 import ProfileSettings from "./pages/profile/ProfileSettings";
+import ForgotPassword from "./pages/login/ForgotPassword";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -20,7 +21,8 @@ const router = createBrowserRouter(
             <Route index={true} element={<Login />} errorElement={<ErrorBoundary />} />
             <Route path="signup" element={<SignUp />} errorElement={<ErrorBoundary />} />
             <Route path="otp" element={<OTP />} errorElement={<ErrorBoundary />} />
-            <Route>
+            <Route path="forgotpassword" element={<ForgotPassword />} errorElement={<ErrorBoundary />} />
+            <Route >
                 <Route
                     path="dashboard"
                     element={

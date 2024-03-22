@@ -77,19 +77,19 @@ export const userExists = (data: Partial<User>): ApiResponse<User> => {
     return api.get<User>(url);
 };
 
-export const otpVerify = (data: OTP): ApiResponse<{ message: string }> => api.post("otp_verify", data); // Replace 'any' with an appropriate type
+export const otpVerify = (data: OTP): ApiResponse<{ message: string }> => api.post("otp_verify", data);
 
-export const otpResend = (): ApiResponse<{ message: string }> => api.post("otp_resend"); // Replace 'any' with an appropriate type
+export const otpResend = (): ApiResponse<{ message: string }> => api.post("otp_resend");
 
-export const passwordResetRequest = (data: any): ApiResponse<any> => api.post("pwd_reset", data); // Replace 'any' with an appropriate type
+export const passwordResetRequest = (data: Password): ApiResponse<any> => api.post("pwd_reset", data); 
 
-export const passwordResetVerifyAndChange = (data: any): ApiResponse<any> => api.put("pwd_reset", data); // Replace 'any' with an appropriate type
+export const passwordResetVerifyAndChange = (data: Password): ApiResponse<any> => api.put("pwd_reset", data);
 
 export const deleteAccount = (id?: number): ApiResponse<void> => api.delete(`user/delete/${id}`);
 
 // Leaderboard endpoints
 export const fetchLeaderboard = (event?: string, period?: number, page?: number): ApiResponse<any> =>
-    api.get("leaderboard", { params: { event, period, page } }); // Replace 'any' with an appropriate type
+    api.get("leaderboard", { params: { event, period, page } }); 
 
 export const inspectProfile = (username?: string): ApiResponse<User> =>
     api.get<User>(`leaderboard/profiles/${username}`);
