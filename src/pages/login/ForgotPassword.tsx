@@ -1,32 +1,24 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
-import CheckIcon from "@mui/icons-material/Check";
 import { CompanyLogo } from "../../components/CompanyLogo";
-import { otpResend, otpVerify, passwordResetRequest, passwordResetVerifyAndChange } from "../../api/api";
-import { useDispatch, useSelector } from "react-redux";
+import { passwordResetRequest, passwordResetVerifyAndChange } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
-import { clearToken, setIsOTPVerified } from "../../redux/authSlice";
-import { useState, useEffect } from "react";
-import { RootState } from "../../redux/store";
-import { Collapse, IconButton, Link, Typography } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { useState } from "react";
+import { Collapse, Link, Typography } from "@mui/material";
 import { PasswordInput } from "../../components/PasswordInput";
 import { SendButton } from "../../components/SendButton";
 
 const defaultTheme = createTheme();
 
 export default function ForgotPassword() {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const SEND_SUCCESS = "A new code has been sent to your email address";
 
     const [hasSentMail, setHasSentMail] = useState(false); 
     const [emailAddress, setEmailAddress] = useState("");
