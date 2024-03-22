@@ -22,6 +22,12 @@ interface OTP {
     otp: string;
 }
 
+interface Password {
+    email?: string;
+    otp?: string;
+    password?: string;
+}
+
 interface AuthState {
     auth: {
         token: string;
