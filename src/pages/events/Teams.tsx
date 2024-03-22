@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CreateTeamModal } from "./components/CreateTeamModal";
+import { RootState } from "../../redux/store";
 
 export const Teams = (props: { event: any; navigate: any }) => {
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");

@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
-import { deleteEvent, createEvent } from "../../api/api";
+import { deleteEvent } from "../../api/api";
 import { CreateEventModal } from "./components/CreateEventModal";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";

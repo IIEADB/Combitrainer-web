@@ -18,7 +18,7 @@ export const Event = () => {
 
     const getEventData = async () => {
         try {
-            const response = await fetchEvent(event.id);
+            const response: any = await fetchEvent(event.id);
             setEvent(response.data.event);
             setLeaderboard(response.data.leaderboard);
         } catch (error) {
@@ -46,7 +46,7 @@ export const Event = () => {
         fetchInvites();
     }, [refresh]);
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+    const handleTabChange = (newValue: any) => {
         setSelectedTab(newValue);
     };
 

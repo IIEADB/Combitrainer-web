@@ -69,7 +69,7 @@ export const UserList = (props: { eventId?: string; participationList?: any; onS
         }
     };
 
-    const handleClick = (event: any, id: number) => {
+    const handleClick = (id: number) => {
         const selectedIndex = selected.indexOf(id);
         let newSelected: any = [];
 
@@ -164,7 +164,7 @@ export const UserList = (props: { eventId?: string; participationList?: any; onS
                                             <TableRow
                                                 key={user.id}
                                                 hover
-                                                onClick={(e) => handleClick(e, user.id)}
+                                                onClick={() => handleClick(user.id)}
                                                 role="checkbox"
                                                 aria-checked={isItemSelected}
                                                 tabIndex={-1}

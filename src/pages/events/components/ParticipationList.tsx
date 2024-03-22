@@ -28,7 +28,7 @@ export const ParticipationList = (props: { participationList: never[]; navigate:
 
     const handleSelectAllClick = (event: { target: { checked: boolean } }) => {
         if (event.target.checked) {
-            const newSelecteds = props.participationList.map((n) => n.id!);
+            const newSelecteds = props.participationList.map((n: any) => n.id!);
             setSelected(newSelecteds);
             return;
         }
