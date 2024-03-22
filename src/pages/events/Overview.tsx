@@ -1,4 +1,4 @@
-import { deleteEvent, fetchLeaderboard } from "../../api/api";
+import { deleteEvent, fetchEvent, fetchLeaderboard } from "../../api/api";
 import { useEffect, useState } from "react";
 import {
     Box,
@@ -13,25 +13,12 @@ import {
     TableHead,
     TableRow,
 } from "@mui/material";
-import styles from "./events.module.css";
-import { EditEventModal } from "./EditEventModal";
+import { EditEventModal } from "./components/EditEventModal";
 import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
-export const Overview = (props: { event?: any; navigate?: any }) => {
-    const [leaderboard, setLeaderboard] = useState([]);
-    const getLeaderboardData = async () => {
-        try {
-            const response = await fetchLeaderboard(props.event.id, "9999", 1);
-            setLeaderboard(response.data.leaderboard);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+export const Overview = (props: { event?: any; navigate?: any; onSubmit?: any; leaderboard?: any }) => {
     const authenticatedUser = useSelector((state: RootState) => state.user);
-
-    useEffect(() => {
-        getLeaderboardData();
-    }, []);
 
     const startDateFormatted = new Date(props.event.start_date).toLocaleDateString(undefined, {
         year: "numeric",
@@ -43,66 +30,73 @@ export const Overview = (props: { event?: any; navigate?: any }) => {
         month: "long",
         day: "numeric",
     });
+
     return (
         <Box>
-            <h1 className={styles.title}>Leaderboard for {props.event.name} </h1>
+            <h1>Leaderboard for {props.event.name} </h1>
             <h2>
                 {startDateFormatted} - {endDateFormatted}
             </h2>
             <Grid item>
-                {authenticatedUser.id === props.event.creator.id && (
-                    <EditEventModal event={props.event} navigate={props.navigate}></EditEventModal>
+                {authenticatedUser?.id === props.event.creator.id && (
+                    <EditEventModal event={props.event} onSubmit={props.onSubmit}></EditEventModal>
                 )}
             </Grid>
-            <TableContainer component={Paper} sx={{ maxHeight: "50vh" }}>
-                <Table>
-                    {props.event.team_event ? (
-                        <>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Rank</TableCell>
-                                    <TableCell>Team</TableCell>
-                                    <TableCell>Points</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {leaderboard.length > 0 &&
-                                    leaderboard.map((team, index) => {
-                                        return (
-                                            <TableRow key={team.id} hover>
-                                                <TableCell>{index + 1}</TableCell>
-                                                <TableCell>{team.team_name}</TableCell>
-                                                <TableCell>{team.points}</TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                            </TableBody>
-                        </>
-                    ) : (
-                        <>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Rank</TableCell>
-                                    <TableCell>Username</TableCell>
-                                    <TableCell>Points</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {leaderboard.length > 0 &&
-                                    leaderboard.map((user, index) => {
-                                        return (
-                                            <TableRow key={user.id} hover>
-                                                <TableCell>{index + 1}</TableCell>
-                                                <TableCell>{user.username}</TableCell>
-                                                <TableCell>{user.points}</TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                            </TableBody>
-                        </>
-                    )}
-                </Table>
-            </TableContainer>
+            <EventLeaderboard event={props.event} navigate={props.navigate} leaderboard={props.leaderboard} />
         </Box>
     );
 };
+
+function EventLeaderboard(props: { event?: any; navigate?: any; leaderboard: any }) {
+    return (
+        <TableContainer component={Paper} sx={{ maxHeight: "50vh" }}>
+            <Table>
+                {props.event?.team_event ? (
+                    <>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Rank</TableCell>
+                                <TableCell>Team</TableCell>
+                                <TableCell>Points</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {props.leaderboard?.length > 0 &&
+                                props.leaderboard?.map((team, index) => {
+                                    return (
+                                        <TableRow key={team.id} hover>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>{team.team_name}</TableCell>
+                                            <TableCell>{team.points}</TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                        </TableBody>
+                    </>
+                ) : (
+                    <>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Rank</TableCell>
+                                <TableCell>Username</TableCell>
+                                <TableCell>Points</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {props.leaderboard?.length > 0 &&
+                                props.leaderboard?.map((user, index) => {
+                                    return (
+                                        <TableRow key={user.id} hover>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>{user.username}</TableCell>
+                                            <TableCell>{user.points}</TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                        </TableBody>
+                    </>
+                )}
+            </Table>
+        </TableContainer>
+    );
+}

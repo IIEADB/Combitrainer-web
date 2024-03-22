@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { deleteInvitation } from "../../api/api";
+import { deleteInvitation } from "../../../api/api";
 import {
     Box,
     Button,
@@ -14,9 +14,8 @@ import {
     TableRow,
     TableSortLabel,
 } from "@mui/material";
-import styles from "./events.module.css";
 
-export const ParticipationList = (props: { participationList: never[]; navigate: any }) => {
+export const ParticipationList = (props: { participationList: never[]; navigate: any; onSubmit?: any }) => {
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
     const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
     const [selected, setSelected] = useState([]);
@@ -63,7 +62,7 @@ export const ParticipationList = (props: { participationList: never[]; navigate:
                     return response;
                 })
             );
-            props.navigate(0);
+            props.onSubmit();
         } catch (error) {
             console.error(error);
         }
@@ -71,7 +70,7 @@ export const ParticipationList = (props: { participationList: never[]; navigate:
 
     return (
         <Grid item xs={6}>
-            <h1 className={styles.title}>Event participation list</h1>
+            <h1>Event participation list</h1>
             <TableContainer component={Paper} sx={{ maxHeight: "50vh" }}>
                 <Table>
                     <TableHead>

@@ -13,20 +13,17 @@ import {
     TableSortLabel,
     TextField,
 } from "@mui/material";
-import styles from "./userlist.module.css";
 import { useEffect, useState } from "react";
-import { createInvitation, filteredUsers } from "../../api/api";
+import { createInvitation, filteredUsers } from "../../../api/api";
 import { useNavigate } from "react-router-dom";
 
-export const UserList = (props: { eventId?: string; participationList?: any }) => {
+export const UserList = (props: { eventId?: string; participationList?: any; onSubmit: any }) => {
     const [userlist, setUserlist] = useState([]);
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
     const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
-
-    const navigate = useNavigate();
 
     const fetchUserList = async () => {
         try {
@@ -68,7 +65,7 @@ export const UserList = (props: { eventId?: string; participationList?: any }) =
                     return response;
                 })
             );
-            navigate(0);
+            props.onSubmit();
         } catch (error) {
             console.error(error);
         }
@@ -116,7 +113,7 @@ export const UserList = (props: { eventId?: string; participationList?: any }) =
             </Button>
             {open && (
                 <>
-                    <h1 className={styles.title}>Add users</h1>
+                    <h1>Add users</h1>
                     <Button disabled={selected.length === 0} variant="contained" onClick={() => handleAddUsers()}>
                         Send request to {selected.length} users
                     </Button>

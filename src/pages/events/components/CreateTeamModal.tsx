@@ -1,10 +1,9 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, Paper, TextField } from "@mui/material";
 import { useState } from "react";
-import { createTeam } from "../../api/api";
+import { createTeam } from "../../../api/api";
 import { useNavigate } from "react-router-dom";
 
-export const CreateTeamModal = (props: { eventId: string }) => {
-    const navigate = useNavigate();
+export const CreateTeamModal = (props: { eventId: string; onSubmit?: any }) => {
     const [formData, setFormData] = useState({
         name: "",
     });
@@ -14,7 +13,7 @@ export const CreateTeamModal = (props: { eventId: string }) => {
         e.preventDefault();
         await createTeam(formData as any, props.eventId);
         setOpen(false);
-        navigate("/dashboard/events", { replace: true });
+        props.onSubmit();
     };
     return (
         <>

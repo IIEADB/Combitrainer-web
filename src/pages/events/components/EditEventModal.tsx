@@ -15,30 +15,61 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
-import { createEvent } from "../../api/api";
+import { createEvent, deleteEvent, editEvent } from "../../../api/api";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import { ConfirmationDialog } from "../../../components/ConfirmationDialog";
 
-export const CreateEventModal = () => {
-    const navigate = useNavigate();
+export const EditEventModal = (props: { event: any; navigate?: any; onSubmit?: any }) => {
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [formData, setFormData] = useState({
-        name: "",
-        team_event: true,
-        start_date: dayjs(new Date()),
-        end_date: dayjs(new Date()).add(1, "d"),
+        name: props.event.name,
+        team_event: props.event.team_event,
+        start_date: props.event.start_date,
+        end_date: props.event.end_date,
     });
     const [open, setOpen] = useState(false);
-
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        await createEvent(formData as any);
+
+        const updatedFields = {};
+
+        Object.keys(formData).forEach((key) => {
+            if (formData[key] !== props.event[key]) {
+                updatedFields[key] = formData[key];
+            }
+        });
+
+        if (Object.keys(updatedFields).length > 0) {
+            await editEvent(updatedFields, props.event.id);
+        }
+
         setOpen(false);
-        navigate("/dashboard/events", { replace: true });
+        props.onSubmit();
+    };
+
+    const handleDeleteEvent = async () => {
+        try {
+            await deleteEvent(props.event.id);
+            setShowConfirmationDialog(false);
+            props.onSubmit();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleConfirmDelete = async () => {
+        setShowConfirmationDialog(true);
     };
     return (
         <>
+            <ConfirmationDialog
+                open={showConfirmationDialog}
+                onClose={() => setShowConfirmationDialog(false)}
+                onConfirm={() => handleDeleteEvent()}
+            />
             <Button variant="contained" onClick={() => setOpen(true)}>
-                Create Event
+                Edit Event
             </Button>
             <Dialog
                 open={open}
@@ -52,10 +83,20 @@ export const CreateEventModal = () => {
                     <DialogContent>
                         <FormControl component={"form"} sx={{ gap: 4, padding: 2 }}>
                             <TextField
+                                value={formData.name}
                                 required={true}
                                 label="Event Name"
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             ></TextField>
+                            <Button
+                                variant="contained"
+                                color="error"
+                                onClick={() => {
+                                    handleConfirmDelete();
+                                }}
+                            >
+                                Delete event
+                            </Button>
                             <Box>
                                 <FormLabel required id="demo-radio-buttons-group-label">
                                     Event Type
@@ -77,13 +118,13 @@ export const CreateEventModal = () => {
                             <Box sx={{ flexDirection: "column", display: "flex", gap: 2 }}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
-                                        defaultValue={formData.start_date}
+                                        defaultValue={dayjs(formData.start_date)}
                                         label="Start Time"
                                         slotProps={{ textField: { required: true } }}
                                         onChange={(e: any) => setFormData({ ...formData, start_date: e.format() })}
                                     />
                                     <DatePicker
-                                        defaultValue={formData.end_date}
+                                        defaultValue={dayjs(formData.end_date)}
                                         label="End Time"
                                         slotProps={{ textField: { required: true } }}
                                         onChange={(e: any) => setFormData({ ...formData, end_date: e.format() })}
@@ -91,8 +132,8 @@ export const CreateEventModal = () => {
                                 </LocalizationProvider>
                             </Box>
                             <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-                                <Button variant="contained" type="submit">
-                                    Create
+                                <Button type="submit" variant="contained">
+                                    Save
                                 </Button>
                                 <Button onClick={() => setOpen(false)} variant="contained">
                                     Close

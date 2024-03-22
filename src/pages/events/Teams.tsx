@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { deleteTeam, fetchTeams } from "../../api/api";
 import {
-    Box,
-    Button,
     Checkbox,
     Grid,
     IconButton,
@@ -15,19 +13,19 @@ import {
     TableRow,
     TableSortLabel,
 } from "@mui/material";
-import styles from "./events.module.css";
 import { useSelector } from "react-redux";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { CreateTeamModal } from "./CreateTeamModal";
+import { CreateTeamModal } from "./components/CreateTeamModal";
 
-export const TeamList = (props: { event: any; navigate: any }) => {
+export const Teams = (props: { event: any; navigate: any }) => {
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
     const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
     const [selected, setSelected] = useState([]);
     const [teamList, setTeamList] = useState([]);
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [selectedTeamId, setSelectedTeamId] = useState(0);
+    const [refresh, setRefresh] = useState(false);
     const authenticatedUser = useSelector((state: RootState) => state.user);
 
     const handleGetTeamList = async () => {
@@ -41,7 +39,7 @@ export const TeamList = (props: { event: any; navigate: any }) => {
 
     useEffect(() => {
         handleGetTeamList();
-    }, []);
+    }, [refresh]);
 
     const handleRequestSort = (property: string) => {
         const isAscending = valueToOrderBy === property && orderDirection === "asc";
@@ -66,7 +64,7 @@ export const TeamList = (props: { event: any; navigate: any }) => {
         try {
             await deleteTeam(selectedTeamId);
             setShowConfirmationDialog(false);
-            props.navigate("/dashboard/events", { replace: true });
+            setRefresh(!refresh);
         } catch (error) {
             console.error(error);
         }
@@ -98,8 +96,8 @@ export const TeamList = (props: { event: any; navigate: any }) => {
                 onConfirm={handleDeleteTeam}
                 onClose={() => setShowConfirmationDialog(false)}
             ></ConfirmationDialog>
-            <CreateTeamModal eventId={props.event.id}></CreateTeamModal>
-            <h1 className={styles.title}>Event team list</h1>
+            <CreateTeamModal onSubmit={() => setRefresh(!refresh)} eventId={props.event.id}></CreateTeamModal>
+            <h1>Event team list</h1>
             <TableContainer component={Paper} sx={{ maxHeight: "50vh" }}>
                 <Table>
                     <TableHead>

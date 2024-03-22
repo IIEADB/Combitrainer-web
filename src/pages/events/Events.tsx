@@ -18,7 +18,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import { deleteEvent, createEvent } from "../../api/api";
-import { CreateEventModal } from "./CreateEventModal";
+import { CreateEventModal } from "./components/CreateEventModal";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
@@ -38,20 +38,20 @@ export const Events = () => {
         try {
             await deleteEvent(selectedEventId);
             setShowConfirmationDialog(false);
-            navigate("/dashboard/events", { replace: true });
+            navigate(0);
         } catch (error) {
             console.error(error);
         }
     };
 
     return (
-        <Grid container spacing={1} sx={{ margin: "10px" }}>
+        <Grid container spacing={1} direction={"row"} alignItems={"center"} justifyContent={"center"}>
             <ConfirmationDialog
                 open={showConfirmationDialog}
                 onClose={() => setShowConfirmationDialog(false)}
                 onConfirm={() => handleDeleteEvent()}
             />
-            <Grid item>
+            <Grid item xs={"auto"}>
                 <h1 className={styles.title}>Events</h1>
                 <EventsTable
                     events={events}

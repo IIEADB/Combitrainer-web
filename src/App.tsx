@@ -6,7 +6,6 @@ import Profile from "./pages/profile/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Layout } from "./components/Layout/Layout";
 import { NotFound } from "./components/NotFound";
-import { Dashboard } from "./pages/dashboard/Dashboard";
 import { Events } from "./pages/events/Events";
 import { fetchEvents } from "./api/api";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -14,6 +13,9 @@ import { Event } from "./pages/events/Event";
 import Login from "./pages/login/Login";
 import SignUp from "./pages/login/SignUp";
 import OTP from "./pages/login/OTP";
+import { Overview } from "./pages/events/Overview";
+import { Participants } from "./pages/events/Participants";
+import { Teams } from "./pages/events/Teams";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -21,7 +23,7 @@ const router = createBrowserRouter(
             <Route index={true} element={<Login />} errorElement={<ErrorBoundary />} />
             <Route path="signup" element={<SignUp />} errorElement={<ErrorBoundary />} />
             <Route path="otp" element={<OTP />} errorElement={<ErrorBoundary />} />
-            <Route >
+            <Route>
                 <Route
                     path="dashboard"
                     element={
@@ -41,7 +43,11 @@ const router = createBrowserRouter(
                         }}
                         errorElement={<ErrorBoundary />}
                     />
-                    <Route path="/dashboard/events/:eventId" element={<Event />} errorElement={<ErrorBoundary />} />
+                    <Route
+                        path="/dashboard/events/:eventId"
+                        element={<Event />}
+                        errorElement={<ErrorBoundary />}
+                    ></Route>
                 </Route>
             </Route>
             <Route path="*" element={<NotFound />} />

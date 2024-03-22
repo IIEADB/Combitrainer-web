@@ -94,6 +94,8 @@ export const fetchLeaderboard = (event?: string, period?: string, page?: number)
 export const inspectProfile = (username?: string): ApiResponse<User> =>
     api.get<User>(`leaderboard/profiles/${username}`);
 
+export const fetchEvent = (id?: number): ApiResponse<Event> => api.get<Event>(`events/${id}`);
+
 export const fetchEvents = (searchQuery?: string): ApiResponse<Event[]> => {
     let url = "events";
     if (searchQuery) {
