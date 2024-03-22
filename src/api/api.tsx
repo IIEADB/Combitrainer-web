@@ -131,7 +131,7 @@ export const fetchTeams = (eventId?: number, searchQuery?: string): ApiResponse<
     return api.get<Team[]>(url);
 };
 
-export const createTeam = (data: any, eventId?: number): ApiResponse<Team> =>
+export const createTeam = (data: any, eventId?: string): ApiResponse<Team> =>
     api.post<Team>(`events/${eventId}/teams`, data);
 
 export const joinTeam = (data: any, teamId?: number): ApiResponse<void> => api.post<void>(`team/${teamId}/join`, data);

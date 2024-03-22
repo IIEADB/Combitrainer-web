@@ -2,7 +2,6 @@ import {
     Box,
     Button,
     Checkbox,
-    Grid,
     Paper,
     Table,
     TableBody,
@@ -15,12 +14,11 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { createInvitation, filteredUsers } from "../../../api/api";
-import { useNavigate } from "react-router-dom";
 
 export const UserList = (props: { eventId?: string; participationList?: any; onSubmit: any }) => {
     const [userlist, setUserlist] = useState([]);
     const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState([]);
+    const [selected, setSelected] = useState<any>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
     const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
@@ -44,9 +42,9 @@ export const UserList = (props: { eventId?: string; participationList?: any; onS
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
-    const handleSelectAllClick = (event) => {
+    const handleSelectAllClick = (event: any) => {
         if (event.target.checked) {
-            const newSelecteds = userlist.map((n) => n.id);
+            const newSelecteds: any = userlist.map((n: any) => n.id);
             setSelected(newSelecteds);
             return;
         }
@@ -56,7 +54,7 @@ export const UserList = (props: { eventId?: string; participationList?: any; onS
     const handleAddUsers = async () => {
         try {
             await Promise.all(
-                selected.map(async (userId) => {
+                selected.map(async (userId: any) => {
                     let response = await createInvitation({
                         event: props.eventId,
                         to_user: userId,
@@ -71,9 +69,9 @@ export const UserList = (props: { eventId?: string; participationList?: any; onS
         }
     };
 
-    const handleClick = (event, id) => {
+    const handleClick = (event: any, id: any) => {
         const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
+        let newSelected: any = [];
 
         if (selectedIndex === -1) {
             newSelected = newSelected.concat(selected, id);
@@ -88,14 +86,14 @@ export const UserList = (props: { eventId?: string; participationList?: any; onS
         setSelected(newSelected);
     };
 
-    const isSelected = (id) => selected.indexOf(id) !== -1;
-    const handleSearchInputChange = (event) => {
+    const isSelected = (id: any) => selected.indexOf(id) !== -1;
+    const handleSearchInputChange = (event: any) => {
         setSearchQuery(event.target.value);
     };
 
-    function filterUserList(invitationsData, userList) {
-        const updatedUserList = userList?.filter((user) => {
-            return !invitationsData.some((request) => request.joining_user.id === user.id);
+    function filterUserList(invitationsData: any, userList: any) {
+        const updatedUserList = userList?.filter((user: any) => {
+            return !invitationsData.some((request: any) => request.joining_user.id === user.id);
         });
         setUserlist(updatedUserList);
     }
@@ -160,7 +158,7 @@ export const UserList = (props: { eventId?: string; participationList?: any; onS
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {userlist.map((user) => {
+                                    {userlist.map((user: any) => {
                                         const isItemSelected = isSelected(user.id);
                                         return (
                                             <TableRow

@@ -1,7 +1,6 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, Paper, TextField } from "@mui/material";
 import { useState } from "react";
 import { createTeam } from "../../../api/api";
-import { useNavigate } from "react-router-dom";
 
 export const CreateTeamModal = (props: { eventId: string; onSubmit?: any }) => {
     const [formData, setFormData] = useState({

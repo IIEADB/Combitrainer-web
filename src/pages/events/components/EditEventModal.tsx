@@ -15,8 +15,7 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
-import { createEvent, deleteEvent, editEvent } from "../../../api/api";
-import { useNavigate } from "react-router-dom";
+import { deleteEvent, editEvent } from "../../../api/api";
 import dayjs from "dayjs";
 import { ConfirmationDialog } from "../../../components/ConfirmationDialog";
 
@@ -29,14 +28,14 @@ export const EditEventModal = (props: { event: any; navigate?: any; onSubmit?: a
         end_date: props.event.end_date,
     });
     const [open, setOpen] = useState(false);
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
 
-        const updatedFields = {};
+        const updatedFields: any = {};
 
-        Object.keys(formData).forEach((key) => {
-            if (formData[key] !== props.event[key]) {
-                updatedFields[key] = formData[key];
+        Object.keys(formData).forEach((key: any) => {
+            if (formData[key as keyof typeof formData] !== props.event[key]) {
+                updatedFields[key] = formData[key as keyof typeof formData];
             }
         });
 

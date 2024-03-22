@@ -1,18 +1,4 @@
-import { deleteEvent, fetchEvent, fetchLeaderboard } from "../../api/api";
-import { useEffect, useState } from "react";
-import {
-    Box,
-    Button,
-    Checkbox,
-    Grid,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-} from "@mui/material";
+import { Box, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { EditEventModal } from "./components/EditEventModal";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -62,7 +48,7 @@ function EventLeaderboard(props: { event?: any; navigate?: any; leaderboard: any
                         </TableHead>
                         <TableBody>
                             {props.leaderboard?.length > 0 &&
-                                props.leaderboard?.map((team, index) => {
+                                props.leaderboard?.map((team: any, index: number) => {
                                     return (
                                         <TableRow key={team.id} hover>
                                             <TableCell>{index + 1}</TableCell>
@@ -84,7 +70,7 @@ function EventLeaderboard(props: { event?: any; navigate?: any; leaderboard: any
                         </TableHead>
                         <TableBody>
                             {props.leaderboard?.length > 0 &&
-                                props.leaderboard?.map((user, index) => {
+                                props.leaderboard?.map((user: any, index: number) => {
                                     return (
                                         <TableRow key={user.id} hover>
                                             <TableCell>{index + 1}</TableCell>
