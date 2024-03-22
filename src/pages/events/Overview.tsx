@@ -25,7 +25,11 @@ export const Overview = (props: { event?: any; navigate?: any; onSubmit?: any; l
             </h2>
             <Grid item>
                 {authenticatedUser?.id === props.event.creator.id && (
-                    <EditEventModal event={props.event} onSubmit={props.onSubmit}></EditEventModal>
+                    <EditEventModal
+                        event={props.event}
+                        onSubmit={props.onSubmit}
+                        navigate={props.navigate}
+                    ></EditEventModal>
                 )}
             </Grid>
             <EventLeaderboard event={props.event} navigate={props.navigate} leaderboard={props.leaderboard} />

@@ -8,9 +8,9 @@ export const CreateTeamModal = (props: { eventId: string; onSubmit?: any }) => {
     });
     const [open, setOpen] = useState(false);
 
-    const handleSubmit = async (e: any) => {
-        e.preventDefault();
-        await createTeam(formData as any, props.eventId);
+    const handleSubmit = async (event: React.FormEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        await createTeam(formData, props.eventId);
         setOpen(false);
         props.onSubmit();
     };

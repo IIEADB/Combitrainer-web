@@ -38,6 +38,7 @@
     gap: var(--gapSize-medium);
     padding: 0 var(--gapSize-medium);
     align-items: center;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
 .navbar {

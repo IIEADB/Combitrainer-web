@@ -1,9 +1,6 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import styles from "./events.module.css";
 import {
-    Box,
-    Button,
-    Container,
     Grid,
     IconButton,
     Paper,
@@ -67,7 +64,17 @@ export const Events = () => {
         </Grid>
     );
 };
-function EventsTable({ events, navigate, handleConfirmDelete, authenticatedUser }: any) {
+function EventsTable({
+    events,
+    navigate,
+    handleConfirmDelete,
+    authenticatedUser,
+}: {
+    events: any;
+    navigate: any;
+    handleConfirmDelete: any;
+    authenticatedUser: Partial<User> | null;
+}) {
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
     const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
 

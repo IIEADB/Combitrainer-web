@@ -19,7 +19,7 @@ import { deleteEvent, editEvent } from "../../../api/api";
 import dayjs from "dayjs";
 import { ConfirmationDialog } from "../../../components/ConfirmationDialog";
 
-export const EditEventModal = (props: { event: any; navigate?: any; onSubmit?: any }) => {
+export const EditEventModal = (props: { event: any; onSubmit?: any; navigate?: any }) => {
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [formData, setFormData] = useState({
         name: props.event.name,
@@ -51,7 +51,7 @@ export const EditEventModal = (props: { event: any; navigate?: any; onSubmit?: a
         try {
             await deleteEvent(props.event.id);
             setShowConfirmationDialog(false);
-            props.onSubmit();
+            props.navigate("/dashboard/events");
         } catch (error) {
             console.error(error);
         }

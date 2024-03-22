@@ -18,7 +18,7 @@ import {
 export const ParticipationList = (props: { participationList: never[]; navigate: any; onSubmit?: any }) => {
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
     const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
-    const [selected, setSelected] = useState([]);
+    const [selected, setSelected] = useState<number[]>([]);
 
     const handleRequestSort = (property: string) => {
         const isAscending = valueToOrderBy === property && orderDirection === "asc";
@@ -26,18 +26,18 @@ export const ParticipationList = (props: { participationList: never[]; navigate:
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
-    const handleSelectAllClick = (event) => {
+    const handleSelectAllClick = (event: { target: { checked: boolean } }) => {
         if (event.target.checked) {
-            const newSelecteds = props.participationList.map((n) => n.id);
+            const newSelecteds = props.participationList.map((n) => n.id!);
             setSelected(newSelecteds);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event, id) => {
+    const handleClick = (id: number) => {
         const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
+        let newSelected: number[] = [];
 
         if (selectedIndex === -1) {
             newSelected = newSelected.concat(selected, id);
@@ -58,7 +58,7 @@ export const ParticipationList = (props: { participationList: never[]; navigate:
         try {
             await Promise.all(
                 selected.map(async (requestId) => {
-                    let response = await deleteInvitation(requestId);
+                    const response = await deleteInvitation(requestId);
                     return response;
                 })
             );
@@ -109,26 +109,28 @@ export const ParticipationList = (props: { participationList: never[]; navigate:
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {props.participationList.map((request) => {
-                            const isItemSelected = isSelected(request.id);
-                            return (
-                                <TableRow
-                                    key={request.id}
-                                    hover
-                                    onClick={(event) => handleClick(event, request.id)}
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    selected={isItemSelected}
-                                >
-                                    <TableCell padding="checkbox">
-                                        <Checkbox checked={isItemSelected} />
-                                    </TableCell>
-                                    <TableCell>{request.joining_user.username}</TableCell>
-                                    <TableCell>{request.status}</TableCell>
-                                </TableRow>
-                            );
-                        })}
+                        {props.participationList.map(
+                            (request: { id: number; joining_user: { username: string }; status: string }) => {
+                                const isItemSelected = isSelected(request.id);
+                                return (
+                                    <TableRow
+                                        key={request.id}
+                                        hover
+                                        onClick={() => handleClick(request.id)}
+                                        role="checkbox"
+                                        aria-checked={isItemSelected}
+                                        tabIndex={-1}
+                                        selected={isItemSelected}
+                                    >
+                                        <TableCell padding="checkbox">
+                                            <Checkbox checked={isItemSelected} />
+                                        </TableCell>
+                                        <TableCell>{request.joining_user.username}</TableCell>
+                                        <TableCell>{request.status}</TableCell>
+                                    </TableRow>
+                                );
+                            }
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>

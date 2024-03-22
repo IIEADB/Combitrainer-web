@@ -2,7 +2,7 @@ interface User {
     access: any;
     refresh: any;
     user: any;
-    id?: number;
+    id: number;
     username?: string;
     achievements?: EarnedAchievement[];
     image?: string;
@@ -12,6 +12,10 @@ interface User {
     private?: boolean;
     visible_on_leaderboard?: boolean;
     email?: string;
+    first_name?: string;
+    last_name?: string;
+    oldPassword?: string;
+    password?: string;
 }
 
 interface OTP {
@@ -112,7 +116,7 @@ interface Event {
 }
 
 interface EventParticipationRequest {
-    id?: number;
+    id: number;
     event?: Event;
     from_user?: User;
     to_user?: User;
@@ -121,7 +125,7 @@ interface EventParticipationRequest {
 }
 
 interface Team {
-    id?: number;
+    id: number;
     name?: string;
     creator?: User;
     event?: Event;

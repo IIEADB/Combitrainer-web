@@ -42,9 +42,9 @@ export const UserList = (props: { eventId?: string; participationList?: any; onS
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
-    const handleSelectAllClick = (event: any) => {
+    const handleSelectAllClick = (event: { target: { checked: boolean } }) => {
         if (event.target.checked) {
-            const newSelecteds: any = userlist.map((n: any) => n.id);
+            const newSelecteds = userlist.map((n: { id: number }) => n.id!);
             setSelected(newSelecteds);
             return;
         }
@@ -69,7 +69,7 @@ export const UserList = (props: { eventId?: string; participationList?: any; onS
         }
     };
 
-    const handleClick = (event: any, id: any) => {
+    const handleClick = (event: any, id: number) => {
         const selectedIndex = selected.indexOf(id);
         let newSelected: any = [];
 
@@ -164,7 +164,7 @@ export const UserList = (props: { eventId?: string; participationList?: any; onS
                                             <TableRow
                                                 key={user.id}
                                                 hover
-                                                onClick={(event) => handleClick(event, user.id)}
+                                                onClick={(e) => handleClick(e, user.id)}
                                                 role="checkbox"
                                                 aria-checked={isItemSelected}
                                                 tabIndex={-1}

@@ -21,8 +21,8 @@ import { CreateTeamModal } from "./components/CreateTeamModal";
 export const Teams = (props: { event: any; navigate: any }) => {
     const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
     const [valueToOrderBy, setValueToOrderBy] = useState<string>("name");
-    const [selected, setSelected] = useState([]);
-    const [teamList, setTeamList] = useState([]);
+    const [selected, setSelected] = useState<number[]>([]);
+    const [teamList, setTeamList] = useState<Team[]>([]);
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [selectedTeamId, setSelectedTeamId] = useState(0);
     const [refresh, setRefresh] = useState(false);
@@ -47,9 +47,9 @@ export const Teams = (props: { event: any; navigate: any }) => {
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
-    const handleSelectAllClick = (event) => {
+    const handleSelectAllClick = (event: { target: { checked: boolean } }) => {
         if (event.target.checked) {
-            const newSelecteds = teamList.map((n) => n.id);
+            const newSelecteds = teamList.map((n) => n.id!);
             setSelected(newSelecteds);
             return;
         }
@@ -70,9 +70,9 @@ export const Teams = (props: { event: any; navigate: any }) => {
         }
     };
 
-    const handleClick = (event, id) => {
+    const handleClick = (id: number) => {
         const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
+        let newSelected: number[] = [];
 
         if (selectedIndex === -1) {
             newSelected = newSelected.concat(selected, id);
@@ -124,13 +124,13 @@ export const Teams = (props: { event: any; navigate: any }) => {
                     </TableHead>
                     <TableBody>
                         {teamList.length > 0 &&
-                            teamList.map((team) => {
+                            teamList.map((team: Team) => {
                                 const isItemSelected = isSelected(team.id);
                                 return (
                                     <TableRow
                                         key={team.id}
                                         hover
-                                        onClick={(team) => handleClick(team, team.id)}
+                                        onClick={(team: any) => handleClick(team.id)}
                                         role="checkbox"
                                         aria-checked={isItemSelected}
                                         tabIndex={-1}

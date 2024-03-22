@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { createInvitation, deleteEvent, fetchEvent, fetchInvitations } from "../../api/api";
-import { Box, Button, Tab, Tabs } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { fetchEvent, fetchInvitations } from "../../api/api";
+import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Overview } from "./Overview";
 import { Teams } from "./Teams";

@@ -1,8 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import styles from "./layout.module.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { clearToken } from "../../redux/authSlice";
-import { Button } from "@mui/material";
 export const Layout = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
