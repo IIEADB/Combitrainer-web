@@ -57,7 +57,7 @@ export const Event = () => {
                 <TabList onChange={handleTabChange}>
                     <Tab label="Overview" value={"0"} />
                     <Tab label="Participants" value={"1"} />
-                    <Tab label="Teams" value={"2"} disabled={!event.team_event}></Tab>
+                    <Tab label="Teams" value={"2"} disabled={event && !event.team_event}></Tab>
                 </TabList>
                 <TabPanel value="0">
                     {!isLoading && (
