@@ -46,7 +46,7 @@ export const Event = () => {
         fetchInvites();
     }, [refresh]);
 
-    const handleTabChange = (newValue: any) => {
+    const handleTabChange = (event: React.SyntheticEvent, newValue: any) => {
         setSelectedTab(newValue);
     };
 
