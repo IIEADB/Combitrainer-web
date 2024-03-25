@@ -47,6 +47,7 @@ export const Event = () => {
     }, [refresh]);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: any) => {
+        console.log(event);
         setSelectedTab(newValue);
     };
 
