@@ -1,6 +1,6 @@
-# My React + TypeScript + Vite Project
+# Combitrainer web app
 
-This project is a modern web application built with React, TypeScript, and Vite. It aims to deliver high performance and a great developer experience.
+This project is a web application built with React, TypeScript, and Vite. It aims to deliver the same kind of experience as the Combitrainer app.
 
 ### Prerequisites
 
