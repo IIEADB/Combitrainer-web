@@ -6,6 +6,12 @@ This project is a web application built with React, TypeScript, and Vite. It aim
 
 Before you begin, ensure you have the latest version of Node.js installed. This will provide you with both Node.js and npm.
 
+## How to run development server
+
+```bash
+npm run dev
+```
+
 ## Deployment Guide
 
 To deploy the project, follow the steps below:
